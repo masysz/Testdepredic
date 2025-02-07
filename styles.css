@@ -68,6 +68,7 @@ button:hover {
     position: absolute;
     width: 100%; /* Sesuaikan ukuran jarum */
     height: 100%;
+    border-radius: 50%;
     background: url('https://i.ibb.co.com/zWh3FX2s/1738952672-picsay.png') no-repeat center center;
     background-size: contain;
 
