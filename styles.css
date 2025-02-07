@@ -97,7 +97,7 @@ button:hover {
     }
 
     .indicator {
-        width: 8px;
+        width: 100px;
         height: 100px;
     }
 }
