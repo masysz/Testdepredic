@@ -7,7 +7,7 @@ async function analyzeToken() {
 
     const apiUrl = `https://micinscore.vercel.app/api/audit/${contractAddress}`;
     try {
-        console.log("Fetching API:", apiUrl); // DEBUG: Lihat apakah URL API benar
+        console.log("Fetching API:", apiUrl);
 
         const response = await fetch(apiUrl, {
             method: "GET",
@@ -21,26 +21,29 @@ async function analyzeToken() {
         }
 
         const data = await response.json();
-        console.log("Data API:", data); // DEBUG: Lihat apakah API mengembalikan data
+        console.log("Parsed API Data:", data);
 
-        if (!data || data.score === undefined) {
+        // **PERBAIKAN UTAMA: AMBIL SCORE DARI `audit.score`**
+        if (!data || !data.audit || typeof data.audit.score === "undefined") {
             document.getElementById("result").innerHTML = "❌ Token tidak ditemukan! (Invalid API response)";
             return;
         }
+
+        const score = data.audit.score;
 
         let rotation = 0;
         let category = "";
         let color = "";
 
-        if (data.score >= 76) {
+        if (score >= 76) {
             rotation = 0;
             category = "BUY 🟢";
             color = "#28a745";
-        } else if (data.score >= 51) {
+        } else if (score >= 51) {
             rotation = -90;
             category = "POTENTIAL 🟠";
             color = "#fd7e14";
-        } else if (data.score >= 26) {
+        } else if (score >= 26) {
             rotation = -180;
             category = "SELL 🔴";
             color = "#dc3545";
@@ -51,7 +54,7 @@ async function analyzeToken() {
         }
 
         document.querySelector(".spinner").style.transform = `rotate(${rotation}deg)`;
-        document.getElementById("result").innerHTML = `<strong style="color:${color};">${category}</strong> (Score: ${data.score})`;
+        document.getElementById("result").innerHTML = `<strong style="color:${color};">${category}</strong> (Score: ${score})`;
 
     } catch (error) {
         document.getElementById("result").innerHTML = `❌ Error: ${error.message}`;
