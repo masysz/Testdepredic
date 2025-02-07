@@ -1,3 +1,18 @@
+let spinning = true; // Status animasi idle
+let indicator = document.querySelector(".indicator");
+
+// **1️⃣ Animasi Jarum Berputar Saat Idle**
+function startIdleSpin() {
+    let angle = 0;
+    setInterval(() => {
+        if (spinning) {
+            angle = (angle + 2) % 360; // Perputaran konstan
+            indicator.style.transform = `rotate(${angle}deg)`;
+        }
+    }, 50); // Putaran lambat terus-menerus
+}
+
+// **2️⃣ Fungsi Scanning dengan Efek Berputar**
 async function analyzeToken() {
     const contractAddress = document.getElementById("contractAddress").value.trim();
     if (!contractAddress) {
@@ -8,7 +23,6 @@ async function analyzeToken() {
     const apiUrl = `https://micinscore.vercel.app/api/audit/${contractAddress}`;
     try {
         console.log("Fetching API:", apiUrl);
-
         const response = await fetch(apiUrl, {
             method: "GET",
             headers: {
@@ -23,7 +37,6 @@ async function analyzeToken() {
         const data = await response.json();
         console.log("Parsed API Data:", data);
 
-        // **PERBAIKAN UTAMA: AMBIL SCORE DARI `audit.score`**
         if (!data || !data.audit || typeof data.audit.score === "undefined") {
             document.getElementById("result").innerHTML = "❌ Token tidak ditemukan! (Invalid API response)";
             return;
@@ -31,29 +44,47 @@ async function analyzeToken() {
 
         const score = data.audit.score;
 
-        let rotation = 0;
+        let finalRotation = 0;
         let category = "";
         let color = "";
 
         if (score >= 76) {
-            rotation = 0;
+            finalRotation = 0;
             category = "BUY 🟢";
             color = "#28a745";
         } else if (score >= 51) {
-            rotation = -90;
+            finalRotation = -90;
             category = "POTENTIAL 🟠";
             color = "#fd7e14";
         } else if (score >= 26) {
-            rotation = -180;
+            finalRotation = -180;
             category = "SELL 🔴";
             color = "#dc3545";
         } else {
-            rotation = -270;
+            finalRotation = -270;
             category = "LOOKING 🟡";
             color = "#ffc107";
         }
 
-        document.querySelector(".spinner").style.transform = `rotate(${rotation}deg)`;
+        // **Stop Idle Spin & Mulai Efek Scanning**
+        spinning = false;
+
+        // **Putar Cepat 2 Kali**
+        indicator.style.transition = "transform 0.6s ease-in-out";
+        indicator.style.transform = "rotate(720deg)"; // 2 putaran cepat
+        await new Promise(resolve => setTimeout(resolve, 600));
+
+        // **Putar Perlahan 1 Kali**
+        indicator.style.transition = "transform 1.5s ease-out";
+        indicator.style.transform = "rotate(1080deg)"; // 1 putaran perlahan
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        // **Berhenti di Skor yang Sesuai**
+        indicator.style.transition = "transform 1s ease-out";
+        indicator.style.transform = `rotate(${finalRotation}deg)`;
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // **Tampilkan Hasil**
         document.getElementById("result").innerHTML = `<strong style="color:${color};">${category}</strong> (Score: ${score})`;
 
     } catch (error) {
@@ -61,3 +92,6 @@ async function analyzeToken() {
         console.error("Error fetching API:", error);
     }
 }
+
+// **Mulai Animasi Idle Saat Halaman Dibuka**
+startIdleSpin();
