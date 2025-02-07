@@ -40,12 +40,12 @@ button:hover {
 /* Spinner Container */
 .spinner-container {
     position: relative;
-    width: 200px;
-    height: 200px;
+    width: 250px; /* Sesuaikan ukuran dengan gambar kompas */
+    height: 250px;
     margin: 20px auto;
 }
 
-/* Lingkaran Spinner dengan Background */
+/* Background Kompas */
 .spinner {
     width: 100%;
     height: 100%;
@@ -64,14 +64,17 @@ button:hover {
 /* Jarum Spinner */
 .indicator {
     position: absolute;
-    width: 50px; /* Sesuaikan dengan ukuran jarum */
-    height: 100px;
-    background: url('https://i.ibb.co.com/gFdT6GT8/Photoroom-20250208-015649.png') no-repeat center center;
+    width: 10px; /* Sesuaikan ukuran jarum */
+    height: 120px; /* Pastikan panjang jarum sesuai */
+    background: url('https://i.ibb.co.com/zWh3FX2s/1738952672-picsay.png') no-repeat center center;
     background-size: contain;
+
+    /* Pastikan jarum berada di tengah kompas */
     top: 50%;
     left: 50%;
-    transform-origin: 50% 100%;
-    transform: translate(-50%, -100%) rotate(0deg);
+    transform-origin: 50% 50%; /* Titik rotasi di tengah jarum */
+    transform: translate(-50%, -50%) rotate(0deg);
+
     transition: transform 1s ease-out;
 }
 
@@ -84,4 +87,17 @@ button:hover {
 #result {
     font-size: 18px;
     margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .spinner-container {
+        width: 200px;
+        height: 200px;
+    }
+
+    .indicator {
+        width: 8px;
+        height: 100px;
+    }
 }
