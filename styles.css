@@ -68,13 +68,12 @@ button:hover {
     position: absolute;
     width: 100%; /* Sesuaikan ukuran jarum */
     height: 100%;
-    border-radius: 50%;
     background: url('https://i.ibb.co.com/zWh3FX2s/1738952672-picsay.png') no-repeat center center;
     background-size: contain;
 
     /* Buat agar jarum ditabrakkan langsung ke kompas */
-    top: 50%;
-    left: 50%;
+    top: 10%;
+    left: 10%;
     transform-origin: 50% 50%; /* Sesuaikan titik rotasi agar pas */
     transform: translate(-50%, -50%) rotate(0deg); 
 
