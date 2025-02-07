@@ -5,18 +5,29 @@ async function analyzeToken() {
         return;
     }
 
-    // Panggil API DexPredictor
     const apiUrl = `https://micinscore.vercel.app/api/audit/${contractAddress}`;
     try {
-        const response = await fetch(apiUrl);
+        console.log("Fetching API:", apiUrl); // DEBUG: Lihat apakah URL API benar
+
+        const response = await fetch(apiUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP Error! Status: ${response.status}`);
+        }
+
         const data = await response.json();
+        console.log("Data API:", data); // DEBUG: Lihat apakah API mengembalikan data
 
         if (!data || data.score === undefined) {
-            document.getElementById("result").innerHTML = "❌ Token tidak ditemukan!";
+            document.getElementById("result").innerHTML = "❌ Token tidak ditemukan! (Invalid API response)";
             return;
         }
 
-        // Tentukan derajat rotasi berdasarkan skor
         let rotation = 0;
         let category = "";
         let color = "";
@@ -39,14 +50,11 @@ async function analyzeToken() {
             color = "#ffc107";
         }
 
-        // Putar spinner ke posisi yang sesuai
         document.querySelector(".spinner").style.transform = `rotate(${rotation}deg)`;
-
-        // Tampilkan hasil dengan warna sesuai
         document.getElementById("result").innerHTML = `<strong style="color:${color};">${category}</strong> (Score: ${data.score})`;
-        
+
     } catch (error) {
-        document.getElementById("result").innerHTML = "❌ Error mengambil data!";
-        console.error("Error fetching data:", error);
+        document.getElementById("result").innerHTML = `❌ Error: ${error.message}`;
+        console.error("Error fetching API:", error);
     }
 }
