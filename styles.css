@@ -1,3 +1,4 @@
+/* General Styling */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -6,11 +7,13 @@ body {
     padding: 20px;
 }
 
+/* Container utama */
 .container {
     max-width: 400px;
     margin: 0 auto;
 }
 
+/* Input dan tombol */
 input {
     width: 100%;
     padding: 10px;
@@ -34,6 +37,7 @@ button:hover {
     background-color: #218838;
 }
 
+/* Spinner Container */
 .spinner-container {
     position: relative;
     width: 200px;
@@ -41,40 +45,42 @@ button:hover {
     margin: 20px auto;
 }
 
+/* Lingkaran Spinner dengan Background */
 .spinner {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 10px solid #ccc;
     position: relative;
-    transition: transform 2s ease-out;
+    background: url('https://www.imghippo.com/i/rWJZ7547Qhg.png') no-repeat center center;
+    background-size: cover;
 }
 
-.spinner::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: conic-gradient(
-        #28a745 0deg 90deg, /* BUY (Green) */
-        #ffc107 90deg 180deg, /* LOOKING (Yellow) */
-        #dc3545 180deg 270deg, /* SELL (Red) */
-        #fd7e14 270deg 360deg /* POTENTIAL (Orange) */
-    );
+/* Animasi Idle Mode */
+@keyframes idleSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
+/* Jarum Spinner */
 .indicator {
     position: absolute;
-    width: 10px;
-    height: 40px;
-    background: white;
-    top: -10px;
+    width: 50px; /* Sesuaikan dengan ukuran jarum */
+    height: 100px;
+    background: url('https://www.imghippo.com/i/cBiJ3909fLE.png') no-repeat center center;
+    background-size: contain;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    clip-path: polygon(50% 0, 0% 100%, 100% 100%);
+    transform-origin: bottom center;
+    transform: translate(-50%, -100%) rotate(0deg);
+    transition: transform 1s ease-out;
 }
 
+/* Animasi Berputar Saat Idle */
+.indicator.spinning {
+    animation: idleSpin 3s linear infinite;
+}
+
+/* Hasil Scan */
 #result {
     font-size: 18px;
     margin-top: 20px;
