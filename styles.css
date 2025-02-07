@@ -99,7 +99,7 @@ button:hover {
     }
 
     .indicator {
-        width: 25px;
+        width: 100px;
         height: 100px;
     }
 }
