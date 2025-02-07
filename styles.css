@@ -72,8 +72,8 @@ button:hover {
     background-size: contain;
 
     /* Buat agar jarum ditabrakkan langsung ke kompas */
-    top: 15%;
-    left: 15%;
+    top: 30%;
+    left: 30%;
     transform-origin: 50% 50%; /* Sesuaikan titik rotasi agar pas */
     transform: translate(-50%, -50%) rotate(0deg); 
 
