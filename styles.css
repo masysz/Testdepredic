@@ -66,8 +66,8 @@ button:hover {
 /* Jarum Spinner */
 .indicator {
     position: absolute;
-    width: 30px; /* Sesuaikan ukuran jarum */
-    height: 120px;
+    width: 100%; /* Sesuaikan ukuran jarum */
+    height: 100%;
     background: url('https://i.ibb.co.com/zWh3FX2s/1738952672-picsay.png') no-repeat center center;
     background-size: contain;
 
