@@ -72,7 +72,7 @@ button:hover {
     /* Pastikan jarum berada di tengah kompas */
     top: 50%;
     left: 50%;
-    transform-origin: 50% 85%; /* Titik rotasi di tengah jarum */
+    transform-origin: 50% 50%; /* Titik rotasi di tengah jarum */
     transform: translate(-50%, -50%) rotate(0deg);
 
     transition: transform 1s ease-out;
