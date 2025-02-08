@@ -23,6 +23,7 @@ async function analyzeToken() {
     const apiUrl = `https://micinscore.vercel.app/api/audit/${contractAddress}`;
     try {
         console.log("Fetching API:", apiUrl);
+
         const response = await fetch(apiUrl, {
             method: "GET",
             headers: {
@@ -43,45 +44,45 @@ async function analyzeToken() {
         }
 
         const score = data.audit.score;
-
         let finalRotation = 0;
         let category = "";
         let color = "";
 
+        // **Tentukan rotasi berdasarkan score**
         if (score >= 76) {
-            finalRotation = 0;
+            finalRotation = 0; // BUY (atas)
             category = "BUY 🟢";
             color = "#28a745";
         } else if (score >= 51) {
-            finalRotation = -90;
+            finalRotation = -270; // POTENTIAL (kiri)
             category = "POTENTIAL 🟠";
             color = "#fd7e14";
         } else if (score >= 26) {
-            finalRotation = -180;
+            finalRotation = -180; // SELL (bawah)
             category = "SELL 🔴";
             color = "#dc3545";
         } else {
-            finalRotation = -270;
+            finalRotation = -90; // LOOKING (kanan)
             category = "LOOKING 🟡";
             color = "#ffc107";
         }
 
         // **Stop Idle Spin & Mulai Efek Scanning**
-        spinning = false;
+        document.querySelector(".indicator").classList.remove("spinning");
 
         // **Putar Cepat 2 Kali**
-        indicator.style.transition = "transform 0.6s ease-in-out";
-        indicator.style.transform = "rotate(720deg)"; // 2 putaran cepat
+        document.querySelector(".indicator").style.transition = "transform 0.6s ease-in-out";
+        document.querySelector(".indicator").style.transform = "rotate(720deg)"; // 2 putaran cepat
         await new Promise(resolve => setTimeout(resolve, 600));
 
         // **Putar Perlahan 1 Kali**
-        indicator.style.transition = "transform 1.5s ease-out";
-        indicator.style.transform = "rotate(1080deg)"; // 1 putaran perlahan
+        document.querySelector(".indicator").style.transition = "transform 1.5s ease-out";
+        document.querySelector(".indicator").style.transform = "rotate(1080deg)"; // 1 putaran perlahan
         await new Promise(resolve => setTimeout(resolve, 1500));
 
         // **Berhenti di Skor yang Sesuai**
-        indicator.style.transition = "transform 1s ease-out";
-        indicator.style.transform = `rotate(${finalRotation}deg)`;
+        document.querySelector(".indicator").style.transition = "transform 1s ease-out";
+        document.querySelector(".indicator").style.transform = `rotate(${finalRotation}deg)`;
         await new Promise(resolve => setTimeout(resolve, 1000));
 
         // **Tampilkan Hasil**
@@ -92,6 +93,3 @@ async function analyzeToken() {
         console.error("Error fetching API:", error);
     }
 }
-
-// **Mulai Animasi Idle Saat Halaman Dibuka**
-startIdleSpin();
