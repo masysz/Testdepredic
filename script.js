@@ -8,13 +8,13 @@ const scanToken = async () => {
 
     // 🔄 Start spinner animation
     const indicator = document.querySelector(".indicator");
-    indicator.classList.add("spinning");
+    indicator.classList.add("spinning"); // 🔥 Mulai idle spin
 
     try {
         const response = await fetch(`/api/audit/${tokenAddress}`);
         const data = await response.json();
 
-        // Stop spinner and show result
+        // Stop idle animation, apply score-based rotation
         indicator.classList.remove("spinning");
         updateSpinner(data.audit.score);
 
@@ -25,7 +25,7 @@ const scanToken = async () => {
     }
 };
 
-// 🔄 Update Spinner based on Score
+// 🔄 Update Spinner Rotation Based on Score
 const updateSpinner = (score) => {
     const indicator = document.querySelector(".indicator");
     let rotation = 0;
