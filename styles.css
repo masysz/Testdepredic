@@ -40,8 +40,8 @@ button:hover {
 /* Spinner Container */
 .spinner-container {
     position: relative;
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
     margin: 20px auto;
 }
 
@@ -62,7 +62,6 @@ button:hover {
     to { transform: rotate(360deg); }
 }
 
-
 /* ✅ Animasi Spinner Saat Idle */
 .indicator.idle-spin {
     animation: idleSpin 5s linear infinite;
@@ -76,7 +75,7 @@ button:hover {
 
 /* ✅ Transisi Halus Saat Spinner Berhenti */
 .indicator {
-    transition: transform 1s ease-out;
+    transition: transform 2s ease-out;
 }
 
 /* Jarum Spinner */
@@ -88,7 +87,6 @@ button:hover {
     background-size: contain;
     transform-origin: 50% 50%;
     transition: transform 1s ease-out;
-    animation: idleSpin 5s linear infinite; /* 🔥 Spinner otomatis berputar sejak awal */
 }
 
 /* Hasil Scan */
