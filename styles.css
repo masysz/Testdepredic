@@ -40,8 +40,8 @@ button:hover {
 /* Spinner Container: Background + Jarum Menjadi Satu */
 .spinner-container {
     position: relative;
-    width: 250px; /* Sesuaikan dengan ukuran gambar kompas */
-    height: 250px;
+    width: 150px; /* Sesuaikan dengan ukuran gambar kompas */
+    height: 150px;
     margin: 20px auto;
 }
 
