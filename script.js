@@ -36,7 +36,7 @@ async function analyzeToken() {
 
         // **Tentukan rotasi berdasarkan score**
         if (score >= 76) {
-            finalRotation = 260; // BUY (atas)
+            finalRotation = 310; // BUY (atas)
             category = "BUY 🟢";
             color = "#28a745";
         } else if (score >= 51) {
