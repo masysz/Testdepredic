@@ -1,17 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("✅ Script loaded...");
+
     const scanButton = document.getElementById("scanButton");
     const tokenInput = document.getElementById("tokenInput");
     const resultDiv = document.getElementById("result");
     const spinner = document.querySelector(".indicator");
 
-    // ✅ Spinner harus selalu berputar saat website dibuka
+    if (!scanButton) console.error("❌ Scan button not found!");
+    if (!tokenInput) console.error("❌ Token input field not found!");
+    if (!resultDiv) console.error("❌ Result container not found!");
+    if (!spinner) console.error("❌ Spinner not found!");
+
+    // ✅ Spinner berputar saat website dibuka
     spinner.classList.add("spinning");
+    console.log("🔄 Spinner is running...");
 
     scanButton.addEventListener("click", async () => {
+        console.log("📌 Scan button clicked!");
+
         const tokenAddress = tokenInput.value.trim();
-        
         if (!tokenAddress) {
             resultDiv.innerHTML = "<p>❌ Please enter a token address.</p>";
+            console.warn("⚠️ No token address entered.");
             return;
         }
 
@@ -21,11 +31,12 @@ document.addEventListener("DOMContentLoaded", () => {
         spinner.classList.add("scanning");
 
         try {
-            // ✅ Fetch API dengan error handling lebih baik
             const apiUrl = `https://micinscore.vercel.app/api/audit/${tokenAddress}`;
             console.log(`🌍 Sending request to: ${apiUrl}`);
 
             const response = await fetch(apiUrl, { method: "GET" });
+
+            console.log(`📡 Fetch request sent to API... Waiting for response`);
 
             if (!response.ok) {
                 throw new Error(`HTTP Error ${response.status} - ${response.statusText}`);
@@ -43,23 +54,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw new Error("Invalid API response or missing audit data.");
             }
 
-            const score = data.audit.score;
+            console.log(`✅ Received Score: ${data.audit.score}`);
             let rotationAngle = 0;
 
-            // ✅ Tentukan posisi jarum berdasarkan skor
-            if (score >= 76) rotationAngle = 0; // Buy (Atas)
-            else if (score >= 51) rotationAngle = 270; // Potential (Kanan)
-            else if (score >= 26) rotationAngle = 180; // Hold (Bawah)
-            else rotationAngle = 90; // Looking (Kiri)
+            if (data.audit.score >= 76) rotationAngle = 0;
+            else if (data.audit.score >= 51) rotationAngle = 270;
+            else if (data.audit.score >= 26) rotationAngle = 180;
+            else rotationAngle = 90;
 
-            // ✅ Animasi Spinner
             spinner.classList.remove("spinning");
             spinner.style.transition = "transform 2s ease-out";
             spinner.style.transform = `rotate(${rotationAngle}deg)`;
 
-            // ✅ Menampilkan hasil audit di UI
             let detailsHTML = `<h3>🔍 Token Audit Result</h3>`;
-            detailsHTML += `<p><strong>Score:</strong> ${score}</p>`;
+            detailsHTML += `<p><strong>Score:</strong> ${data.audit.score}</p>`;
             detailsHTML += `<p><strong>Risk Level:</strong> ${data.audit.risk}</p>`;
             detailsHTML += `<ul>`;
 
