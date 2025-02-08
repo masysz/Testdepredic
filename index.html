@@ -3,24 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DexPredictor - Token Analysis</title>
+    <title>Crypto Token Scanner</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
     <div class="container">
-        <h1>DexPredictor 🧭</h1>
-        <p>Masukkan Contract Address untuk Menganalisis Token:</p>
-        <input type="text" id="contractAddress" placeholder="Masukkan CA (Contract Address)">
-        <button onclick="analyzeToken()">Scan</button>
+        <h1>Crypto Token Scanner</h1>
+        <p>Scan a Solana token to analyze its risk and potential.</p>
 
+        <!-- Input Token -->
+        <input type="text" id="tokenInput" placeholder="Enter token address">
+        <button onclick="scanToken()">🔍 Scan</button>
+
+        <!-- Spinner UI -->
         <div class="spinner-container">
-            <div class="spinner">
-                <div class="indicator"></div>
+            <div class="spinner"></div>
+            <div class="indicator"></div>
+        </div>
+
+        <!-- Scan Result -->
+        <div id="result"></div>
+
+        <!-- Detailed Parameter Result -->
+        <div id="scan-details"></div>
+
+        <!-- Early Radar Section -->
+        <div class="early-radar-container">
+            <h2>🚀 Early Radar</h2>
+            <div id="early-radar-list">
+                <p>Scanning for potential tokens...</p>
             </div>
         </div>
 
-        <div id="result"></div>
     </div>
 
     <script src="script.js"></script>
