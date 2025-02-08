@@ -1,102 +1,83 @@
-// 🔥 Scan Token Function
-const scanToken = async () => {
-    const tokenAddress = document.getElementById("tokenInput").value.trim();
-    if (!tokenAddress) {
-        alert("❌ Please enter a valid token address!");
-        return;
-    }
+document.addEventListener("DOMContentLoaded", () => {
+    const spinner = document.querySelector(".indicator");
+    const resultDiv = document.getElementById("result");
+    const scanButton = document.getElementById("scanButton");
+    const tokenInput = document.getElementById("tokenInput");
 
-    // 🔄 Hentikan animasi idle, percepat putaran sebelum berhenti
-    const indicator = document.querySelector(".indicator");
-    indicator.style.animation = "none"; // Hentikan animasi idle
-    indicator.style.transition = "transform 0.5s ease-out";
-    indicator.style.transform = "rotate(720deg)"; // 🔥 Putar cepat 2 kali
+    // Pastikan spinner selalu berputar saat website dibuka
+    spinner.classList.add("spinning");
 
-    try {
-        const response = await fetch(`/api/audit/${tokenAddress}`);
-        if (!response.ok) throw new Error("API request failed");
-
-        const data = await response.json();
-
-        // 🔄 Hentikan animasi dan set posisi sesuai skor
-        setTimeout(() => {
-            updateSpinner(data.audit.score);
-        }, 1000);
-
-        displayResult(data);
-    } catch (error) {
-        console.error("❌ Error scanning token:", error);
-        document.getElementById("result").innerHTML = "<p>❌ Error scanning token.</p>";
-
-        // 🔄 Jika gagal, kembalikan ke mode idle
-        indicator.style.animation = "idleSpin 5s linear infinite";
-    }
-};
-
-// 🔄 Update Spinner Rotation Based on Score
-const updateSpinner = (score) => {
-    const indicator = document.querySelector(".indicator");
-    let rotation = 0;
-
-    if (score >= 76) rotation = 0; // Buy
-    else if (score >= 51) rotation = 90; // Potential
-    else if (score >= 26) rotation = 180; // Sell
-    else rotation = 270; // Looking
-
-    indicator.style.transform = `rotate(${rotation}deg)`;
-};
-
-// 📊 Display Scan Result
-const displayResult = (data) => {
-    const resultContainer = document.getElementById("result");
-    resultContainer.innerHTML = `
-        <h3>🔍 Audit Result</h3>
-        <p><strong>Token:</strong> ${data.token}</p>
-        <p><strong>Status:</strong> ${data.audit.status}</p>
-        <p><strong>Score:</strong> ${data.audit.score}</p>
-    `;
-
-    // 📊 Display Detailed Parameters
-    const detailsContainer = document.getElementById("scan-details");
-    detailsContainer.innerHTML = "<h3>📊 Detailed Analysis</h3>";
-    
-    data.audit.details.forEach(item => {
-        const detailItem = document.createElement("p");
-        detailItem.innerHTML = `<strong>${item.factor}:</strong> ${item.status} (Deduction: ${item.deduction ?? 0})`;
-        detailsContainer.appendChild(detailItem);
-    });
-};
-
-// 🔥 Fetch Early Radar Tokens
-const fetchEarlyRadar = async () => {
-    try {
-        const response = await fetch('/api/early-radar');
-        const tokens = await response.json();
-
-        const radarContainer = document.getElementById('early-radar-list');
-        radarContainer.innerHTML = "";
-
-        if (tokens.length === 0) {
-            radarContainer.innerHTML = "<p>No new promising tokens detected yet.</p>";
+    // Saat scan dilakukan
+    scanButton.addEventListener("click", async () => {
+        const tokenAddress = tokenInput.value.trim();
+        if (!tokenAddress) {
+            resultDiv.innerHTML = "<p>❌ Please enter a token address.</p>";
             return;
         }
 
-        tokens.forEach(token => {
-            const tokenElement = document.createElement("div");
-            tokenElement.classList.add("early-radar-token");
-            tokenElement.innerHTML = `
-                <p><strong>${token.name}</strong> (${token.address})</p>
-                <p>Score: <span class="score-badge">${token.score}</span></p>
-            `;
-            radarContainer.appendChild(tokenElement);
-        });
+        // Reset UI
+        resultDiv.innerHTML = "<p>🔍 Scanning...</p>";
+        scanButton.disabled = true; // Cegah spam klik
+        spinner.classList.add("scanning"); // Tambah animasi scan
 
-    } catch (error) {
-        console.error("❌ Error fetching Early Radar:", error);
-        document.getElementById('early-radar-list').innerHTML = "<p>Error loading Early Radar.</p>";
-    }
-};
+        try {
+            console.log(`🔎 Fetching data for token: ${tokenAddress}`);
+            
+            // Ganti URL sesuai dengan backend yang digunakan
+            const response = await fetch(`https://micinscore.vercel.app/api/audit/${tokenAddress}`);
+            
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.statusText}`);
+            }
 
-// 🔄 Auto-refresh Early Radar setiap 5 menit
-setInterval(fetchEarlyRadar, 300000);
-fetchEarlyRadar();
+            const data = await response.json();
+            console.log("📊 API Response:", data);
+
+            // Pastikan ada data audit
+            if (!data || !data.audit) {
+                throw new Error("Invalid API response");
+            }
+
+            // Ambil skor dari API
+            const score = data.audit.score;
+            let rotationAngle = 0;
+
+            // Tentukan rotasi berdasarkan skor
+            if (score >= 76) {
+                rotationAngle = 0; // Buy (atas)
+            } else if (score >= 51) {
+                rotationAngle = 270; // Potential (kanan)
+            } else if (score >= 26) {
+                rotationAngle = 180; // Sell (bawah)
+            } else {
+                rotationAngle = 90; // Looking (kiri)
+            }
+
+            // Jalankan animasi spinner
+            spinner.classList.remove("spinning"); // Hentikan idle spin
+            spinner.style.transition = "transform 2s ease-out";
+            spinner.style.transform = `rotate(${rotationAngle}deg)`;
+
+            // Tampilkan hasil scanning
+            let detailsHTML = `<h3>🔍 Token Audit Result</h3>`;
+            detailsHTML += `<p><strong>Score:</strong> ${score}</p>`;
+            detailsHTML += `<p><strong>Risk Level:</strong> ${data.audit.risk}</p>`;
+            detailsHTML += `<ul>`;
+
+            data.audit.details.forEach((detail) => {
+                const icon = detail.deduction > 0 ? "❌" : "✅";
+                detailsHTML += `<li>${icon} <strong>${detail.factor}:</strong> ${detail.status}</li>`;
+            });
+
+            detailsHTML += `</ul>`;
+            resultDiv.innerHTML = detailsHTML;
+
+        } catch (error) {
+            console.error("🚨 Error fetching audit data:", error);
+            resultDiv.innerHTML = `<p>❌ Error scanning token: ${error.message}</p>`;
+        }
+
+        // Re-enable tombol scan setelah selesai
+        scanButton.disabled = false;
+    });
+});
