@@ -11,9 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!resultDiv) console.error("❌ Result container not found!");
     if (!spinner) console.error("❌ Spinner not found!");
 
-    // ✅ Spinner berputar saat website dibuka
+    // ✅ Spinner selalu berputar saat halaman pertama dibuka
     spinner.classList.add("spinning");
-    console.log("🔄 Spinner is running...");
+    console.log("🔄 Spinner is running on idle mode...");
 
     scanButton.addEventListener("click", async () => {
         console.log("📌 Scan button clicked!");
@@ -57,15 +57,18 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(`✅ Received Score: ${data.audit.score}`);
             let rotationAngle = 0;
 
-            if (data.audit.score >= 76) rotationAngle = 0;
-            else if (data.audit.score >= 51) rotationAngle = 270;
-            else if (data.audit.score >= 26) rotationAngle = 180;
-            else rotationAngle = 90;
+            // ✅ Tentukan posisi jarum berdasarkan skor
+            if (data.audit.score >= 76) rotationAngle = 0; // Buy (Atas)
+            else if (data.audit.score >= 51) rotationAngle = 270; // Potential (Kanan)
+            else if (data.audit.score >= 26) rotationAngle = 180; // Hold (Bawah)
+            else rotationAngle = 90; // Looking (Kiri)
 
+            // ✅ Animasi Spinner
             spinner.classList.remove("spinning");
             spinner.style.transition = "transform 2s ease-out";
             spinner.style.transform = `rotate(${rotationAngle}deg)`;
 
+            // ✅ Menampilkan hasil audit di UI
             let detailsHTML = `<h3>🔍 Token Audit Result</h3>`;
             detailsHTML += `<p><strong>Score:</strong> ${data.audit.score}</p>`;
             detailsHTML += `<p><strong>Risk Level:</strong> ${data.audit.risk}</p>`;
