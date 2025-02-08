@@ -68,6 +68,12 @@ button:hover {
     animation: idleSpin 5s linear infinite;
 }
 
+/* ✅ Animasi Spinner Saat Scanning */
+@keyframes fastSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(1800deg); } /* 5 putaran penuh */
+}
+
 /* ✅ Transisi Halus Saat Spinner Berhenti */
 .indicator {
     transition: transform 1s ease-out;
