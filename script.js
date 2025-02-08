@@ -44,12 +44,12 @@ async function analyzeToken() {
             category = "POTENTIAL 🟠";
             color = "#fd7e14";
         } else if (score >= 26) {
-            finalRotation = 180; // SELL (bawah)
+            finalRotation = 130; // SELL (bawah)
             category = "SELL 🔴";
             color = "#dc3545";
         } else {
             finalRotation = 40; // LOOKING (kanan)
-            category = "LOOKING 🟡";
+            category = "HIGH RISK ❌️";
             color = "#ffc107";
         }
 
