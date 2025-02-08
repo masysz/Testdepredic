@@ -1,13 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const spinner = document.querySelector(".indicator");
-    const resultDiv = document.getElementById("result");
     const scanButton = document.getElementById("scanButton");
     const tokenInput = document.getElementById("tokenInput");
+    const resultDiv = document.getElementById("result");
+    const spinner = document.querySelector(".indicator");
 
-    // ✅ Spinner tetap berputar saat idle (sebelum scan)
+    // ✅ Spinner harus selalu berputar saat website dibuka
     spinner.classList.add("spinning");
 
-    // ✅ Event saat tombol Scan ditekan
     scanButton.addEventListener("click", async () => {
         const tokenAddress = tokenInput.value.trim();
         if (!tokenAddress) {
@@ -15,50 +14,42 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Reset UI saat scanning dimulai
         resultDiv.innerHTML = "<p>🔍 Scanning...</p>";
-        scanButton.disabled = true; // Hindari spam klik
-        spinner.classList.add("scanning"); // Tambah efek scan
+        scanButton.disabled = true;
+        spinner.classList.add("scanning");
 
         try {
             console.log(`🔎 Fetching data for token: ${tokenAddress}`);
-
-            // ✅ Pastikan fetch API menggunakan URL yang benar
             const response = await fetch(`https://micinscore.vercel.app/api/audit/${tokenAddress}`);
 
-            if (!response.ok) {
-                throw new Error(`API Error: ${response.statusText}`);
+            // ✅ Periksa apakah response dalam format JSON
+            const contentType = response.headers.get("content-type");
+            if (!response.ok || !contentType || !contentType.includes("application/json")) {
+                throw new Error("Invalid API response format.");
             }
 
             const data = await response.json();
             console.log("📊 API Response:", data);
 
-            // ✅ Pastikan API mengembalikan data yang valid
             if (!data || !data.audit || typeof data.audit.score === "undefined") {
                 throw new Error("Invalid API response or missing data.");
             }
 
-            // Ambil skor dari API
             const score = data.audit.score;
             let rotationAngle = 0;
 
-            // ✅ Tentukan rotasi berdasarkan skor yang didapat
-            if (score >= 76) {
-                rotationAngle = 0; // Buy (atas)
-            } else if (score >= 51) {
-                rotationAngle = 270; // Potential (kanan)
-            } else if (score >= 26) {
-                rotationAngle = 180; // Sell (bawah)
-            } else {
-                rotationAngle = 90; // Looking (kiri)
-            }
+            // ✅ Tentukan posisi jarum berdasarkan skor
+            if (score >= 76) rotationAngle = 0; // Buy (Atas)
+            else if (score >= 51) rotationAngle = 270; // Potential (Kanan)
+            else if (score >= 26) rotationAngle = 180; // Hold (Bawah)
+            else rotationAngle = 90; // Looking (Kiri)
 
-            // ✅ Jalankan animasi spinner
-            spinner.classList.remove("spinning"); // Hentikan idle spin
+            // ✅ Animasi Spinner
+            spinner.classList.remove("spinning");
             spinner.style.transition = "transform 2s ease-out";
             spinner.style.transform = `rotate(${rotationAngle}deg)`;
 
-            // ✅ Tampilkan hasil scanning dengan lebih informatif
+            // ✅ Buat tampilan hasil parameter audit
             let detailsHTML = `<h3>🔍 Token Audit Result</h3>`;
             detailsHTML += `<p><strong>Score:</strong> ${score}</p>`;
             detailsHTML += `<p><strong>Risk Level:</strong> ${data.audit.risk}</p>`;
@@ -77,7 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
             resultDiv.innerHTML = `<p>❌ Error scanning token: ${error.message}</p>`;
         }
 
-        // ✅ Aktifkan kembali tombol scan setelah selesai
         scanButton.disabled = false;
     });
 });
