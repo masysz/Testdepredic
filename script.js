@@ -41,10 +41,10 @@ function scanToken() {
     // ✅ Hentikan animasi idle sebelum scanning
     spinnerIndicator.classList.remove("idle-spin");
 
-    // ✅ Animasi spinner berputar kencang sebelum berhenti di indikator
+    // ✅ Animasi spinner berputar cepat sebelum berhenti di indikator
     let rotation = 0;
     let fastSpins = 5; // Jumlah putaran cepat
-    let spinSpeed = 100; // Kecepatan awal (ms)
+    let spinSpeed = 150; // Kecepatan awal (ms)
 
     function animateFastSpin() {
         if (fastSpins > 0) {
@@ -100,7 +100,7 @@ function scanToken() {
 
                     // ✅ Putar jarum ke posisi akhir dengan efek transisi halus
                     setTimeout(() => {
-                        spinnerIndicator.style.transition = "transform 1s ease-out";
+                        spinnerIndicator.style.transition = "transform 2s ease-out";
                         spinnerIndicator.style.transform = `rotate(${finalRotation}deg)`;
                     }, 500);
                 })
