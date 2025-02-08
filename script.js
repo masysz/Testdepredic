@@ -1,18 +1,4 @@
-let spinning = true; // Status animasi idle
-let indicator = document.querySelector(".indicator");
-
-// **1️⃣ Animasi Jarum Berputar Saat Idle**
-function startIdleSpin() {
-    let angle = 0;
-    setInterval(() => {
-        if (spinning) {
-            angle = (angle + 2) % 360; // Perputaran konstan
-            indicator.style.transform = `rotate(${angle}deg)`;
-        }
-    }, 50); // Putaran lambat terus-menerus
-}
-
-// **2️⃣ Fungsi Scanning dengan Efek Berputar**
+// Fungsi untuk mengambil data dari API dan mengontrol pergerakan jarum spinner
 async function analyzeToken() {
     const contractAddress = document.getElementById("contractAddress").value.trim();
     if (!contractAddress) {
@@ -93,3 +79,14 @@ async function analyzeToken() {
         console.error("Error fetching API:", error);
     }
 }
+
+// **Fungsi untuk Idle Spin sebelum scanning dilakukan**
+function startIdleSpin() {
+    let indicator = document.querySelector(".indicator");
+    if (indicator) {
+        indicator.classList.add("spinning");
+    }
+}
+
+// **Panggil fungsi Idle Spin saat halaman dimuat**
+window.onload = startIdleSpin;
