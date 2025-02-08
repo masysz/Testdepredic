@@ -14,7 +14,10 @@
 
         <!-- Input Token -->
         <input type="text" id="tokenInput" placeholder="Enter token address">
-        <button id="scanButton">🔍 Scan</button> <!-- ✅ Fix: Pakai `id="scanButton"` -->
+        <button id="scanButton">🔍 Scan</button>
+
+        <!-- ✅ Slot Iklan 1 (Di bawah tombol scan) -->
+        <div class="ad-slot">🔸 Sponsored Ad 🔸</div>
 
         <!-- Spinner UI -->
         <div class="spinner-container">
@@ -22,8 +25,14 @@
             <div class="indicator"></div>
         </div>
 
+        <!-- ✅ Slot Iklan 2 (Di atas hasil scanning) -->
+        <div class="ad-slot">📢 Crypto Project Promo</div>
+
         <!-- Scan Result -->
         <div id="result"></div>
+
+        <!-- ✅ Slot Iklan 3 (Di bawah hasil scanning) -->
+        <div class="ad-slot">🔥 Trending Crypto Ad</div>
 
         <!-- Detailed Parameter Result -->
         <div id="scan-details"></div>
@@ -31,14 +40,22 @@
         <!-- Early Radar Section -->
         <div class="early-radar-container">
             <h2>🚀 Early Radar</h2>
+
+            <!-- ✅ Slot Iklan 4 (Di dalam Early Radar) -->
+            <div class="ad-slot">📊 Early Project Ads</div>
+
             <div id="early-radar-list">
                 <p>Scanning for potential tokens...</p>
             </div>
         </div>
 
+        <!-- ✅ Slot Iklan 5 (Di bagian footer) -->
+        <div class="footer-ad">
+            🌍 Crypto Partnership & Promotions
+        </div>
+
     </div>
 
-    <!-- ✅ Pastikan script.js dipanggil di akhir -->
     <script src="script.js"></script>
 </body>
 </html>
