@@ -37,11 +37,11 @@ button:hover {
     background-color: #218838;
 }
 
-/* Spinner Container: Background + Jarum Menjadi Satu */
+/* Spinner Container */
 .spinner-container {
     position: relative;
-    width: 150px; /* Sesuaikan dengan ukuran gambar kompas */
-    height: 150px;
+    width: 120px;
+    height: 120px;
     margin: 20px auto;
 }
 
@@ -49,57 +49,49 @@ button:hover {
 .spinner {
     width: 100%;
     height: 100%;
-    border-radius: 50%;
-    position: absolute; /* Pastikan background tidak terpisah */
+    position: absolute;
     top: 0;
     left: 0;
     background: url('https://i.ibb.co.com/S7nNsXXD/1738949193-pics.png') no-repeat center center;
     background-size: contain;
 }
 
-/* Animasi Idle Mode */
-@keyframes idleSpin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
 /* Jarum Spinner */
 .indicator {
     position: absolute;
-    width: 100%; /* Sesuaikan ukuran jarum */
+    width: 100%;
     height: 100%;
     background: url('https://i.ibb.co.com/zWh3FX2s/1738952672-picsay.png') no-repeat center center;
     background-size: contain;
-
-    /* Buat agar jarum ditabrakkan langsung ke kompas */
-    top: 25%;
-    left: 25%;
-    transform-origin: 50% 50%; /* Sesuaikan titik rotasi agar pas */
-    transform: translate(-50%, -50%) rotate(0deg); 
-
+    transform-origin: 50% 50%;
+    transform: translate(-50%, -50%) rotate(0deg);
     transition: transform 1s ease-out;
 }
 
-/* Animasi Berputar Saat Idle */
-.indicator.spinning {
-    animation: idleSpin 3s linear infinite;
-}
-
 /* Hasil Scan */
-#result {
-    font-size: 18px;
+#result, #scan-details {
+    font-size: 14px;
     margin-top: 20px;
 }
 
-/* Responsive Design */
-@media (max-width: 480px) {
-    .spinner-container {
-        width: 200px;
-        height: 200px;
-    }
+/* Early Radar */
+.early-radar-container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
 
-    .indicator {
-        width: 100px;
-        height: 100px;
-    }
+.early-radar-token {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 8px;
+    border-radius: 5px;
+    margin: 5px 0;
+}
+
+.score-badge {
+    background: #28a745;
+    color: white;
+    padding: 3px 6px;
+    border-radius: 5px;
 }
