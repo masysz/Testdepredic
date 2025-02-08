@@ -71,11 +71,7 @@ button:hover {
     background-size: contain;
     transform-origin: 50% 50%;
     transition: transform 1s ease-out;
-}
-
-/* Animasi Idle */
-.indicator.spinning {
-    animation: idleSpin 3s linear infinite;
+    animation: idleSpin 5s linear infinite; /* 🔥 Spinner otomatis berputar sejak awal */
 }
 
 /* Hasil Scan */
