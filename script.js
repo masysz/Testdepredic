@@ -6,22 +6,30 @@ const scanToken = async () => {
         return;
     }
 
-    // 🔄 Start spinner animation
+    // 🔄 Hentikan animasi idle, percepat putaran sebelum berhenti
     const indicator = document.querySelector(".indicator");
-    indicator.classList.add("spinning"); // 🔥 Mulai idle spin
+    indicator.style.animation = "none"; // Hentikan animasi idle
+    indicator.style.transition = "transform 0.5s ease-out";
+    indicator.style.transform = "rotate(720deg)"; // 🔥 Putar cepat 2 kali
 
     try {
         const response = await fetch(`/api/audit/${tokenAddress}`);
+        if (!response.ok) throw new Error("API request failed");
+
         const data = await response.json();
 
-        // Stop idle animation, apply score-based rotation
-        indicator.classList.remove("spinning");
-        updateSpinner(data.audit.score);
+        // 🔄 Hentikan animasi dan set posisi sesuai skor
+        setTimeout(() => {
+            updateSpinner(data.audit.score);
+        }, 1000);
 
         displayResult(data);
     } catch (error) {
         console.error("❌ Error scanning token:", error);
         document.getElementById("result").innerHTML = "<p>❌ Error scanning token.</p>";
+
+        // 🔄 Jika gagal, kembalikan ke mode idle
+        indicator.style.animation = "idleSpin 5s linear infinite";
     }
 };
 
