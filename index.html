@@ -14,7 +14,7 @@
 
         <!-- Input Token -->
         <input type="text" id="tokenInput" placeholder="Enter token address">
-        <button onclick="scanToken()">🔍 Scan</button>
+        <button id="scanButton">🔍 Scan</button> <!-- ✅ Fix: Pakai `id="scanButton"` -->
 
         <!-- Spinner UI -->
         <div class="spinner-container">
@@ -38,6 +38,7 @@
 
     </div>
 
+    <!-- ✅ Pastikan script.js dipanggil di akhir -->
     <script src="script.js"></script>
 </body>
 </html>
