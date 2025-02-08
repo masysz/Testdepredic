@@ -56,6 +56,12 @@ button:hover {
     background-size: contain;
 }
 
+/* Animasi Idle Mode */
+@keyframes idleSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 /* Jarum Spinner */
 .indicator {
     position: absolute;
@@ -64,8 +70,12 @@ button:hover {
     background: url('https://i.ibb.co.com/zWh3FX2s/1738952672-picsay.png') no-repeat center center;
     background-size: contain;
     transform-origin: 50% 50%;
-    transform: translate(-50%, -50%) rotate(0deg);
     transition: transform 1s ease-out;
+}
+
+/* Animasi Idle */
+.indicator.spinning {
+    animation: idleSpin 3s linear infinite;
 }
 
 /* Hasil Scan */
