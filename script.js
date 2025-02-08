@@ -9,30 +9,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
     scanButton.addEventListener("click", async () => {
         const tokenAddress = tokenInput.value.trim();
+        
         if (!tokenAddress) {
             resultDiv.innerHTML = "<p>❌ Please enter a token address.</p>";
             return;
         }
 
+        console.log(`🔎 Fetching data for token: ${tokenAddress}`);
         resultDiv.innerHTML = "<p>🔍 Scanning...</p>";
         scanButton.disabled = true;
         spinner.classList.add("scanning");
 
         try {
-            console.log(`🔎 Fetching data for token: ${tokenAddress}`);
-            const response = await fetch(`https://micinscore.vercel.app/api/audit/${tokenAddress}`);
+            // ✅ Fetch API dengan error handling lebih baik
+            const apiUrl = `https://micinscore.vercel.app/api/audit/${tokenAddress}`;
+            console.log(`🌍 Sending request to: ${apiUrl}`);
 
-            // ✅ Periksa apakah response dalam format JSON
+            const response = await fetch(apiUrl, { method: "GET" });
+
+            if (!response.ok) {
+                throw new Error(`HTTP Error ${response.status} - ${response.statusText}`);
+            }
+
             const contentType = response.headers.get("content-type");
-            if (!response.ok || !contentType || !contentType.includes("application/json")) {
-                throw new Error("Invalid API response format.");
+            if (!contentType || !contentType.includes("application/json")) {
+                throw new Error("Invalid API response format (Not JSON)");
             }
 
             const data = await response.json();
-            console.log("📊 API Response:", data);
+            console.log("📊 API Response Data:", data);
 
             if (!data || !data.audit || typeof data.audit.score === "undefined") {
-                throw new Error("Invalid API response or missing data.");
+                throw new Error("Invalid API response or missing audit data.");
             }
 
             const score = data.audit.score;
@@ -49,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
             spinner.style.transition = "transform 2s ease-out";
             spinner.style.transform = `rotate(${rotationAngle}deg)`;
 
-            // ✅ Buat tampilan hasil parameter audit
+            // ✅ Menampilkan hasil audit di UI
             let detailsHTML = `<h3>🔍 Token Audit Result</h3>`;
             detailsHTML += `<p><strong>Score:</strong> ${score}</p>`;
             detailsHTML += `<p><strong>Risk Level:</strong> ${data.audit.risk}</p>`;
@@ -64,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
             resultDiv.innerHTML = detailsHTML;
 
         } catch (error) {
-            console.error("🚨 Error fetching audit data:", error);
+            console.error("🚨 Fetching error:", error);
             resultDiv.innerHTML = `<p>❌ Error scanning token: ${error.message}</p>`;
         }
 
