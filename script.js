@@ -40,7 +40,7 @@ async function analyzeToken() {
             category = "BUY 🟢";
             color = "#28a745";
         } else if (score >= 51) {
-            finalRotation = -270; // POTENTIAL (kiri)
+            finalRotation = 45; // POTENTIAL (kiri)
             category = "POTENTIAL 🟠";
             color = "#fd7e14";
         } else if (score >= 26) {
