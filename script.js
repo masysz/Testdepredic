@@ -40,7 +40,7 @@ async function analyzeToken() {
             category = "BUY 🟢";
             color = "#28a745";
         } else if (score >= 51) {
-            finalRotation = 90; // POTENTIAL (kiri)
+            finalRotation = -90; // POTENTIAL (kiri)
             category = "POTENTIAL 🟠";
             color = "#fd7e14";
         } else if (score >= 26) {
@@ -48,7 +48,7 @@ async function analyzeToken() {
             category = "SELL 🔴";
             color = "#dc3545";
         } else {
-            finalRotation = 270; // LOOKING (kanan)
+            finalRotation = -270; // LOOKING (kanan)
             category = "LOOKING 🟡";
             color = "#ffc107";
         }
