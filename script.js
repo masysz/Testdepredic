@@ -118,7 +118,7 @@ function scanToken() {
     animateFastSpin();
 }
 
-// ✅ Function untuk mengambil data Early Radar dengan mekanisme retry & cache bypass
+// ✅ Function untuk mengambil data Early Radar dengan Perbaikan Cache
 async function fetchEarlyRadar(retryCount = 3, delay = 2000) {
     const radarContainer = document.getElementById("early-radar-list");
     radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
@@ -126,18 +126,15 @@ async function fetchEarlyRadar(retryCount = 3, delay = 2000) {
     try {
         console.log("📡 Fetching Early Radar data...");
 
-        // 🔥 Tambahkan timestamp agar fetch tidak terkena cache
-        const timestamp = new Date().getTime();
-        const response = await fetch(`https://micinscore.vercel.app/api/early-radar?t=${timestamp}`);
-
-        if (!response.ok) {
-            throw new Error(`HTTP Error: ${response.status}`);
-        }
+        // 🔥 Tambahkan timestamp agar cache tidak digunakan
+        const response = await fetch(`https://micinscore.vercel.app/api/early-radar?t=${Date.now()}`, {
+            cache: "no-store"
+        });
 
         const data = await response.json();
         console.log("📊 Early Radar API Response:", data);
 
-        if (data.status !== "success" || !Array.isArray(data.tokens) || data.tokens.length === 0) {
+        if (!data || data.status !== "success" || !data.tokens || data.tokens.length === 0) {
             console.warn("⚠️ No tokens found in API response.");
 
             if (retryCount > 0) {
@@ -149,21 +146,24 @@ async function fetchEarlyRadar(retryCount = 3, delay = 2000) {
             return;
         }
 
-        // 🔥 Tampilkan token di frontend dengan tampilan yang lebih rapi
-        radarContainer.innerHTML = data.tokens.map(token => `
-            <div class="early-radar-token">
-                <img src="${token.icon}" alt="${token.token}" class="token-icon">
-                <div class="token-info">
-                    <a href="${token.url}" target="_blank"><strong>${token.token.slice(0, 4)}...${token.token.slice(-4)}</strong></a>
-                    <button class="copy-btn" onclick="copyToClipboard('${token.token}')">📋</button>
-                    <p>🛡️ Score: <strong>${token.score}</strong> | 💰 Liquidity: <strong>$${token.liquidity.toLocaleString()}</strong></p>
-                    <p>📊 Volume: <strong>$${token.volume.toLocaleString()}</strong> | ⚠️ Risk: <strong>${token.risk}</strong></p>
-                    <div class="token-links">
-                        ${token.socialLinks.map(link => `<a href="${link.url}" target="_blank">🔗 ${link.label || link.type}</a>`).join(" ")}
+        // 🔥 Pastikan data terbaru ditampilkan
+        radarContainer.innerHTML = "";
+        data.tokens.forEach(token => {
+            radarContainer.innerHTML += `
+                <div class="early-radar-token">
+                    <img src="${token.icon}" alt="${token.token}" class="token-icon">
+                    <div class="token-info">
+                        <a href="${token.url}" target="_blank"><strong>${token.token.slice(0, 4)}...${token.token.slice(-4)}</strong></a>
+                        <button class="copy-btn" onclick="copyToClipboard('${token.token}')">📋</button>
+                        <p>🛡️ Score: <strong>${token.score}</strong> | 💰 Liquidity: <strong>$${token.liquidity.toLocaleString()}</strong></p>
+                        <p>📊 Volume: <strong>$${token.volume.toLocaleString()}</strong> | ⚠️ Risk: <strong>${token.risk}</strong></p>
+                        <div class="token-links">
+                            ${token.socialLinks.map(link => `<a href="${link.url}" target="_blank">🔗 ${link.label || link.type}</a>`).join(" ")}
+                        </div>
                     </div>
                 </div>
-            </div>
-        `).join("");
+            `;
+        });
 
     } catch (error) {
         console.error("❌ Error fetching early radar data:", error);
