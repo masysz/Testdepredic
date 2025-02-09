@@ -118,7 +118,7 @@ function scanToken() {
     animateFastSpin();
 }
 
-// ✅ Function untuk mengambil data Early Radar dengan Perbaikan Cache
+// ✅ Function untuk mengambil data Early Radar dengan Perbaikan Data Handling
 async function fetchEarlyRadar(retryCount = 3, delay = 2000) {
     const radarContainer = document.getElementById("early-radar-list");
     radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
@@ -141,28 +141,41 @@ async function fetchEarlyRadar(retryCount = 3, delay = 2000) {
                 console.log(`🔄 Retrying fetch... Attempts left: ${retryCount}`);
                 setTimeout(() => fetchEarlyRadar(retryCount - 1, delay), delay);
             } else {
-                radarContainer.innerHTML = `<p>🚫 No early tokens found at the moment.</p>`;
+                // **🔥 Jangan hapus data jika sudah ada sebelumnya**
+                if (!radarContainer.innerHTML.includes("early-radar-token")) {
+                    radarContainer.innerHTML = `<p>🚫 No early tokens found at the moment.</p>`;
+                }
             }
             return;
         }
 
-        // 🔥 Pastikan data terbaru ditampilkan
-        radarContainer.innerHTML = "";
+        // **🔥 Reset list hanya jika belum ada data sebelumnya**
+        if (!radarContainer.innerHTML.includes("early-radar-token")) {
+            radarContainer.innerHTML = "";
+        }
+
         data.tokens.forEach(token => {
-            radarContainer.innerHTML += `
-                <div class="early-radar-token">
-                    <img src="${token.icon}" alt="${token.token}" class="token-icon">
-                    <div class="token-info">
-                        <a href="${token.url}" target="_blank"><strong>${token.token.slice(0, 4)}...${token.token.slice(-4)}</strong></a>
-                        <button class="copy-btn" onclick="copyToClipboard('${token.token}')">📋</button>
-                        <p>🛡️ Score: <strong>${token.score}</strong> | 💰 Liquidity: <strong>$${token.liquidity.toLocaleString()}</strong></p>
-                        <p>📊 Volume: <strong>$${token.volume.toLocaleString()}</strong> | ⚠️ Risk: <strong>${token.risk}</strong></p>
-                        <div class="token-links">
-                            ${token.socialLinks.map(link => `<a href="${link.url}" target="_blank">🔗 ${link.label || link.type}</a>`).join(" ")}
+            try {
+                // **Cegah duplikasi token**
+                if (document.getElementById(`token-${token.token}`)) return;
+
+                radarContainer.innerHTML += `
+                    <div class="early-radar-token" id="token-${token.token}">
+                        <img src="${token.icon}" alt="${token.token}" class="token-icon">
+                        <div class="token-info">
+                            <a href="${token.url}" target="_blank"><strong>${token.token.slice(0, 4)}...${token.token.slice(-4)}</strong></a>
+                            <button class="copy-btn" onclick="copyToClipboard('${token.token}')">📋</button>
+                            <p>🛡️ Score: <strong>${token.score}</strong> | 💰 Liquidity: <strong>$${token.liquidity.toLocaleString()}</strong></p>
+                            <p>📊 Volume: <strong>$${token.volume.toLocaleString()}</strong> | ⚠️ Risk: <strong>${token.risk}</strong></p>
+                            <div class="token-links">
+                                ${token.socialLinks.map(link => `<a href="${link.url}" target="_blank">🔗 ${link.label || link.type}</a>`).join(" ")}
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
+                `;
+            } catch (error) {
+                console.error("⚠️ Error rendering token:", error);
+            }
         });
 
     } catch (error) {
@@ -172,11 +185,13 @@ async function fetchEarlyRadar(retryCount = 3, delay = 2000) {
             console.log(`🔄 Retrying fetch... Attempts left: ${retryCount}`);
             setTimeout(() => fetchEarlyRadar(retryCount - 1, delay), delay);
         } else {
-            radarContainer.innerHTML = `<p>⚠️ Failed to load early tokens. Please try again later.</p>`;
+            // **🔥 Jangan hapus data jika sudah ada sebelumnya**
+            if (!radarContainer.innerHTML.includes("early-radar-token")) {
+                radarContainer.innerHTML = `<p>⚠️ Failed to load early tokens. Please try again later.</p>`;
+            }
         }
     }
 }
-
 // ✅ Fungsi Copy ke Clipboard
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
