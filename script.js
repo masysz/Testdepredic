@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const scanButton = document.getElementById("scanButton");
     const tokenInput = document.getElementById("tokenInput");
     const spinnerIndicator = document.querySelector(".indicator");
-    const earlyRadarButton = document.getElementById("loadEarlyRadar"); // ✅ Fix tombol
+    const earlyRadarButton = document.getElementById("loadEarlyRadar");
 
     if (!scanButton || !tokenInput || !spinnerIndicator) {
         console.error("❌ Missing elements in DOM!");
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ✅ Animasi idle: Spinner berputar perlahan sebelum scanning
     spinnerIndicator.classList.add("idle-spin");
 
-    // ✅ Tambahkan event listener tombol scan
+    // ✅ Event listener tombol Scan
     scanButton.addEventListener("click", () => {
         console.log("📌 Scan button clicked!");
         scanToken();
@@ -24,11 +24,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (earlyRadarButton) {
         earlyRadarButton.addEventListener("click", () => {
             console.log("🚀 Show Tokens button clicked!");
-            fetchEarlyRadar();
+            fetchEarlyRadar(true); // Memaksa refresh
         });
     } else {
         console.error("❌ Early Radar button not found in DOM!");
     }
+
+    // ✅ Auto-refresh data setiap 5 menit
+    setInterval(() => {
+        console.log("🔄 Auto-refreshing Early Radar data...");
+        fetchEarlyRadar(true); // Paksa refresh setiap 5 menit
+    }, 300000); // 5 menit dalam milidetik
 });
 
 // ✅ Fungsi untuk melakukan scanning token
@@ -55,16 +61,15 @@ function scanToken() {
     // ✅ Animasi spinner berputar cepat sebelum berhenti di indikator
     let rotation = 0;
     let fastSpins = 5; // Jumlah putaran cepat
-    let spinSpeed = 150; // Kecepatan awal (ms)
+    let spinSpeed = 150;
 
     function animateFastSpin() {
         if (fastSpins > 0) {
-            rotation += 360; // Putar penuh setiap iterasi
+            rotation += 360;
             spinnerIndicator.style.transform = `rotate(${rotation}deg)`;
             fastSpins--;
             setTimeout(animateFastSpin, spinSpeed);
         } else {
-            // Setelah putaran cepat selesai, ambil data dari API
             fetch(`https://micinscore.vercel.app/api/audit/${tokenAddress}`)
                 .then(response => response.json())
                 .then(data => {
@@ -80,22 +85,20 @@ function scanToken() {
                     let resultSymbol = "";
                     let finalRotation = 0;
 
-                    // ✅ Tentukan posisi akhir jarum berdasarkan skor & tambahkan simbol
                     if (score >= 76) {
-                        finalRotation = 0; // Buy (Atas)
+                        finalRotation = 0;
                         resultSymbol = "🟢 Buy";
                     } else if (score >= 51) {
-                        finalRotation = 270; // Potential (Kanan)
+                        finalRotation = 270;
                         resultSymbol = "🟡 Potential";
                     } else if (score >= 26) {
-                        finalRotation = 180; // Sell (Bawah)
+                        finalRotation = 180;
                         resultSymbol = "🔴 Sell";
                     } else {
-                        finalRotation = 90; // Looking (Kiri)
+                        finalRotation = 90;
                         resultSymbol = "⚠️ Looking";
                     }
 
-                    // ✅ Format tampilan hasil scan
                     let detailsHTML = `<h3>🔍 Token Audit Result</h3>`;
                     detailsHTML += `<p><strong>Score:</strong> ${score} - <strong>${resultSymbol}</strong></p>`;
                     detailsHTML += `<p><strong>Risk Level:</strong> ${riskLevel}</p>`;
@@ -109,7 +112,6 @@ function scanToken() {
                     detailsHTML += `</ul>`;
                     resultDiv.innerHTML = detailsHTML;
 
-                    // ✅ Putar jarum ke posisi akhir dengan efek transisi halus
                     setTimeout(() => {
                         spinnerIndicator.style.transition = "transform 2s ease-out";
                         spinnerIndicator.style.transform = `rotate(${finalRotation}deg)`;
@@ -122,25 +124,26 @@ function scanToken() {
         }
     }
 
-    // ✅ Mulai animasi putaran cepat sebelum mengambil data API
     animateFastSpin();
 }
 
-// ✅ Fungsi untuk mengambil data Early Radar saat tombol diklik
-async function fetchEarlyRadar() {
+// ✅ Fungsi untuk mengambil data Early Radar dengan Auto-Refresh
+async function fetchEarlyRadar(forceRefresh = false) {
     const radarContainer = document.getElementById("early-radar-list");
 
-    // 🔍 Coba gunakan data yang sudah tersimpan sebelum melakukan request baru
-    const savedTokens = localStorage.getItem("earlyRadarData");
-    if (savedTokens) {
-        console.log("🔄 Using cached early radar data.");
-        displayEarlyRadar(JSON.parse(savedTokens));
-        return;
+    // 🔍 Hanya pakai cache jika tidak ada permintaan refresh paksa
+    if (!forceRefresh) {
+        const savedTokens = localStorage.getItem("earlyRadarData");
+        if (savedTokens) {
+            console.log("🔄 Using cached early radar data.");
+            displayEarlyRadar(JSON.parse(savedTokens));
+            return;
+        }
     }
 
-    if (!radarContainer.innerHTML.includes("early-radar-token")) {
-        radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
-    }
+    // ✅ Hapus data lama sebelum mengambil yang baru
+    localStorage.removeItem("earlyRadarData");
+    radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
 
     try {
         console.log("📡 Fetching Early Radar data...");
@@ -162,10 +165,9 @@ async function fetchEarlyRadar() {
             return;
         }
 
-        // ✅ Simpan hasil response agar bisa digunakan kembali
+        // ✅ Simpan data baru agar bisa digunakan lagi sebelum refresh berikutnya
         localStorage.setItem("earlyRadarData", JSON.stringify(data.tokens));
 
-        // ✅ Tampilkan hasil
         displayEarlyRadar(data.tokens);
 
     } catch (error) {
@@ -174,22 +176,20 @@ async function fetchEarlyRadar() {
     }
 }
 
-// ✅ Fungsi menampilkan hasil lengkap di Early Radar (FIX Tombol Copy)
+// ✅ Fungsi menampilkan hasil tanpa menghapus data lama sembarangan
 function displayEarlyRadar(tokens) {
     const radarContainer = document.getElementById("early-radar-list");
-    radarContainer.innerHTML = ""; // Hapus isi sebelumnya sebelum menampilkan yang baru
+    radarContainer.innerHTML = "";
 
     tokens.forEach(token => {
-        // ✅ ID unik untuk setiap tombol copy
         const tokenId = `copy-${token.token}`;
 
-        // ✅ Tambahkan elemen ke DOM dengan insertAdjacentHTML
-        radarContainer.insertAdjacentHTML("beforeend", `
+        radarContainer.innerHTML += `
             <div class="early-radar-token">
                 <img src="${token.icon}" alt="${token.token}" class="token-icon">
                 <div class="token-info">
                     <a href="${token.url}" target="_blank"><strong>${token.token.slice(0, 4)}...${token.token.slice(-4)}</strong></a>
-                    <button class="copy-btn" id="${tokenId}" data-token="${token.token}">📋 Copy</button>
+                    <button class="copy-btn" id="${tokenId}">📋</button>
                     <p>🛡️ Score: <strong>${token.score}</strong> | 💰 Liquidity: <strong>$${token.liquidity.toLocaleString()}</strong></p>
                     <p>📊 Volume: <strong>$${token.volume.toLocaleString()}</strong> | ⚠️ Risk: <strong>${token.risk}</strong></p>
                     <div class="token-links">
@@ -197,22 +197,18 @@ function displayEarlyRadar(tokens) {
                     </div>
                 </div>
             </div>
-        `);
-    });
+        `;
 
-    // ✅ Event delegation untuk menangani klik tombol copy
-    document.querySelectorAll(".copy-btn").forEach(button => {
-        button.addEventListener("click", function () {
-            const contractAddress = this.getAttribute("data-token");
-            copyToClipboard(contractAddress);
-        });
+        setTimeout(() => {
+            document.getElementById(tokenId)?.addEventListener("click", () => copyToClipboard(token.token));
+        }, 100);
     });
 }
 
 // ✅ Fungsi Copy ke Clipboard
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
-        alert(`✅ Contract Address Copied!\n${text}`);
+        alert("✅ Contract Address Copied!");
     }).catch(err => {
         console.error("❌ Failed to copy:", err);
     });
