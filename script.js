@@ -180,15 +180,16 @@ function displayEarlyRadar(tokens) {
     radarContainer.innerHTML = ""; // Hapus isi sebelumnya sebelum menampilkan yang baru
 
     tokens.forEach(token => {
-        const tokenId = `copy-${token.token}`; // ID unik untuk tombol copy
+        // ✅ ID unik untuk setiap tombol copy
+        const tokenId = `copy-${token.token}`;
 
-        // ✅ Tambahkan elemen dengan insertAdjacentHTML agar masuk ke DOM satu per satu
+        // ✅ Tambahkan elemen ke DOM dengan insertAdjacentHTML
         radarContainer.insertAdjacentHTML("beforeend", `
             <div class="early-radar-token">
                 <img src="${token.icon}" alt="${token.token}" class="token-icon">
                 <div class="token-info">
                     <a href="${token.url}" target="_blank"><strong>${token.token.slice(0, 4)}...${token.token.slice(-4)}</strong></a>
-                    <button class="copy-btn" id="${tokenId}" data-token="${token.token}">📋</button>
+                    <button class="copy-btn" id="${tokenId}" data-token="${token.token}">📋 Copy</button>
                     <p>🛡️ Score: <strong>${token.score}</strong> | 💰 Liquidity: <strong>$${token.liquidity.toLocaleString()}</strong></p>
                     <p>📊 Volume: <strong>$${token.volume.toLocaleString()}</strong> | ⚠️ Risk: <strong>${token.risk}</strong></p>
                     <div class="token-links">
@@ -199,11 +200,20 @@ function displayEarlyRadar(tokens) {
         `);
     });
 
-    // ✅ Event delegation untuk menangani klik tombol copy (Agar tetap berfungsi meskipun elemen dibuat secara dinamis)
-    radarContainer.addEventListener("click", event => {
-        if (event.target.classList.contains("copy-btn")) {
-            const contractAddress = event.target.getAttribute("data-token");
+    // ✅ Event delegation untuk menangani klik tombol copy
+    document.querySelectorAll(".copy-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            const contractAddress = this.getAttribute("data-token");
             copyToClipboard(contractAddress);
-        }
+        });
+    });
+}
+
+// ✅ Fungsi Copy ke Clipboard
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        alert(`✅ Contract Address Copied!\n${text}`);
+    }).catch(err => {
+        console.error("❌ Failed to copy:", err);
     });
 }
