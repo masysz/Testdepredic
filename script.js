@@ -18,9 +18,12 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("📌 Scan button clicked!");
         scanToken();
     });
+
+    // ✅ Jalankan Early Radar saat halaman dimuat
+    fetchEarlyRadar();
 });
 
-// ✅ Fungsi untuk melakukan scanning token
+// ✅ Fungsi untuk melakukan scanning token (tidak diubah)
 function scanToken() {
     console.log("🔍 Starting token scan...");
 
@@ -113,4 +116,39 @@ function scanToken() {
 
     // ✅ Mulai animasi putaran cepat sebelum mengambil data API
     animateFastSpin();
+}
+
+// ✅ Function untuk mengambil data Early Radar
+async function fetchEarlyRadar() {
+    const radarContainer = document.getElementById("early-radar-list");
+    radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
+
+    try {
+        const response = await fetch("https://micinscore.vercel.app/api/early-radar"); // 🔥 API backend
+        const data = await response.json();
+
+        if (data.status !== "success" || !data.tokens || data.tokens.length === 0) {
+            radarContainer.innerHTML = `<p>🚫 No early tokens found at the moment.</p>`;
+            return;
+        }
+
+        // 🔥 Tampilkan token di frontend
+        radarContainer.innerHTML = data.tokens.map(token => `
+            <div class="early-radar-token">
+                <img src="${token.icon}" alt="${token.token}" class="token-icon">
+                <div class="token-info">
+                    <a href="${token.url}" target="_blank"><strong>${token.token}</strong></a>
+                    <p>🛡️ Score: <strong>${token.score}</strong> | 💰 Liquidity: <strong>$${token.liquidity.toLocaleString()}</strong></p>
+                    <p>📊 Volume: <strong>$${token.volume.toLocaleString()}</strong> | ⚠️ Risk: <strong>${token.risk}</strong></p>
+                </div>
+                <div class="token-links">
+                    ${token.socialLinks.map(link => `<a href="${link.url}" target="_blank">🔗 ${link.label || link.type}</a>`).join(" ")}
+                </div>
+            </div>
+        `).join("");
+
+    } catch (error) {
+        console.error("❌ Error fetching early radar data:", error);
+        radarContainer.innerHTML = `<p>⚠️ Failed to load early tokens. Please try again later.</p>`;
+    }
 }
