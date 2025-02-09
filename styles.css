@@ -39,26 +39,22 @@ button:hover {
 
 /* ✅ Styling Iklan */
 .ad-slot {
-    background: rgba(255, 255, 255, 0.15);
-    padding: 10px;
+    display: block;
+    width: 100%;
+    max-width: 380px;
+    height: 60px;
+    margin: 10px auto;
     border-radius: 5px;
-    margin: 10px 0;
-    font-size: 14px;
-    color: #fff;
-    text-align: center;
-    font-weight: bold;
 }
 
 /* ✅ Iklan Footer */
 .footer-ad {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 15px;
-    border-radius: 5px;
+    display: block;
+    width: 100%;
+    max-width: 380px;
+    height: 80px;
     margin-top: 20px;
-    font-size: 14px;
-    color: #fff;
-    text-align: center;
-    font-weight: bold;
+    border-radius: 5px;
 }
 
 /* Spinner Container */
