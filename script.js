@@ -118,9 +118,7 @@ function scanToken() {
     animateFastSpin();
 }
 
- // ✅ Jalankan Early Radar
-    fetchEarlyRadar();
-});
+
 
 // ✅ Function untuk mengambil data Early Radar (Final Fix)
 async function fetchEarlyRadar(retryCount = 5, delay = 3000) {
