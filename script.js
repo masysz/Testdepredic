@@ -4,8 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const scanButton = document.getElementById("scanButton");
     const tokenInput = document.getElementById("tokenInput");
     const spinnerIndicator = document.querySelector(".indicator");
+    const earlyRadarButton = document.getElementById("earlyRadarButton"); // ✅ Deklarasi tombol Show Tokens
 
-    if (!scanButton || !tokenInput || !spinnerIndicator) {
+    if (!scanButton || !tokenInput || !spinnerIndicator || !earlyRadarButton) {
         console.error("❌ Missing elements in DOM!");
         return;
     }
@@ -19,14 +20,16 @@ document.addEventListener("DOMContentLoaded", () => {
         scanToken();
     });
 
-    // ✅ Jalankan Early Radar saat halaman dimuat
-    fetchEarlyRadar();
+    // ✅ Event listener untuk tombol "Show Tokens"
+    earlyRadarButton.addEventListener("click", () => {
+        console.log("🚀 Show Tokens button clicked!");
+        fetchEarlyRadar();
+    });
 });
 
-// ✅ Fungsi untuk melakukan scanning token
+// ✅ Fungsi untuk melakukan scanning token (tidak diubah)
 function scanToken() {
     console.log("🔍 Starting token scan...");
-
     const tokenInput = document.getElementById("tokenInput");
     const resultDiv = document.getElementById("result");
     const spinnerIndicator = document.querySelector(".indicator");
@@ -46,17 +49,16 @@ function scanToken() {
 
     // ✅ Animasi spinner berputar cepat sebelum berhenti di indikator
     let rotation = 0;
-    let fastSpins = 5; // Jumlah putaran cepat
-    let spinSpeed = 150; // Kecepatan awal (ms)
+    let fastSpins = 5; 
+    let spinSpeed = 150; 
 
     function animateFastSpin() {
         if (fastSpins > 0) {
-            rotation += 360; // Putar penuh setiap iterasi
+            rotation += 360; 
             spinnerIndicator.style.transform = `rotate(${rotation}deg)`;
             fastSpins--;
             setTimeout(animateFastSpin, spinSpeed);
         } else {
-            // Setelah putaran cepat selesai, ambil data dari API
             fetch(`https://micinscore.vercel.app/api/audit/${tokenAddress}`)
                 .then(response => response.json())
                 .then(data => {
@@ -72,22 +74,20 @@ function scanToken() {
                     let resultSymbol = "";
                     let finalRotation = 0;
 
-                    // ✅ Tentukan posisi akhir jarum berdasarkan skor & tambahkan simbol
                     if (score >= 76) {
-                        finalRotation = 0; // Buy (Atas)
+                        finalRotation = 0; 
                         resultSymbol = "🟢 Buy";
                     } else if (score >= 51) {
-                        finalRotation = 270; // Potential (Kanan)
+                        finalRotation = 270; 
                         resultSymbol = "🟡 Potential";
                     } else if (score >= 26) {
-                        finalRotation = 180; // Sell (Bawah)
+                        finalRotation = 180; 
                         resultSymbol = "🔴 Sell";
                     } else {
-                        finalRotation = 90; // Looking (Kiri)
+                        finalRotation = 90; 
                         resultSymbol = "⚠️ Looking";
                     }
 
-                    // ✅ Format tampilan hasil scan
                     let detailsHTML = `<h3>🔍 Token Audit Result</h3>`;
                     detailsHTML += `<p><strong>Score:</strong> ${score} - <strong>${resultSymbol}</strong></p>`;
                     detailsHTML += `<p><strong>Risk Level:</strong> ${riskLevel}</p>`;
@@ -101,7 +101,6 @@ function scanToken() {
                     detailsHTML += `</ul>`;
                     resultDiv.innerHTML = detailsHTML;
 
-                    // ✅ Putar jarum ke posisi akhir dengan efek transisi halus
                     setTimeout(() => {
                         spinnerIndicator.style.transition = "transform 2s ease-out";
                         spinnerIndicator.style.transform = `rotate(${finalRotation}deg)`;
@@ -114,27 +113,16 @@ function scanToken() {
         }
     }
 
-    // ✅ Mulai animasi putaran cepat sebelum mengambil data API
     animateFastSpin();
 }
 
-
-
-  // ✅ Event listener untuk early radar
-    earlyRadarButton.addEventListener("click", () => {
-        console.log("🚀 Show Tokens button clicked!");
-        fetchEarlyRadar();
-    });
-
-// ✅ Fungsi untuk mengambil data Early Radar saat tombol diklik
+// ✅ Fungsi untuk mengambil data Early Radar (hanya saat tombol diklik)
 async function fetchEarlyRadar() {
     const radarContainer = document.getElementById("early-radar-list");
     radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
 
     try {
         console.log("📡 Fetching Early Radar data...");
-
-        // Gunakan timestamp di URL untuk menghindari cache browser
         const response = await fetch(`https://micinscore.vercel.app/api/early-radar?t=${Date.now()}`, {
             method: "GET",
             headers: {
@@ -153,7 +141,6 @@ async function fetchEarlyRadar() {
             return;
         }
 
-        // ✅ Reset isi container sebelum menambahkan token baru
         radarContainer.innerHTML = "";
 
         data.tokens.forEach(token => {
