@@ -4,33 +4,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const scanButton = document.getElementById("scanButton");
     const tokenInput = document.getElementById("tokenInput");
     const spinnerIndicator = document.querySelector(".indicator");
-    const earlyRadarButton = document.getElementById("earlyRadarButton");
+    const earlyRadarButton = document.getElementById("earlyRadarButton"); // 🔥 FIX! Pastikan tombol ada
 
     if (!scanButton || !tokenInput || !spinnerIndicator || !earlyRadarButton) {
         console.error("❌ Missing elements in DOM!");
         return;
     }
 
-    // ✅ Animasi idle: Spinner berputar perlahan sebelum scanning (TIDAK DIUBAH)
+    // ✅ Animasi idle: Spinner berputar perlahan sebelum scanning
     spinnerIndicator.classList.add("idle-spin");
 
-    // ✅ Event listener tombol scan (Audit dengan Spinner, TIDAK DIUBAH)
+    // ✅ Tambahkan event listener tombol scan
     scanButton.addEventListener("click", () => {
         console.log("📌 Scan button clicked!");
         scanToken();
     });
 
-    // ✅ Event listener tombol "Show Tokens" (Early Radar, PERBAIKAN)
+    // ✅ Tambahkan event listener tombol "Show Tokens"
     earlyRadarButton.addEventListener("click", () => {
         console.log("🚀 Show Tokens button clicked!");
         fetchEarlyRadar();
     });
 });
 
-// ✅ **Sistem Audit & Spinner (TIDAK DIUBAH)** ✅
+// ✅ Fungsi untuk melakukan scanning token (Tidak diubah!)
 function scanToken() {
     console.log("🔍 Starting token scan...");
-
     const tokenInput = document.getElementById("tokenInput");
     const resultDiv = document.getElementById("result");
     const spinnerIndicator = document.querySelector(".indicator");
@@ -45,10 +44,10 @@ function scanToken() {
     console.log(`🔎 Fetching data for token: ${tokenAddress}`);
     resultDiv.innerHTML = "<p>🔍 Scanning...</p>";
 
-    // ✅ Hentikan animasi idle sebelum scanning (TIDAK DIUBAH)
+    // ✅ Hentikan animasi idle sebelum scanning
     spinnerIndicator.classList.remove("idle-spin");
 
-    // ✅ Animasi spinner berputar cepat sebelum berhenti di indikator (TIDAK DIUBAH)
+    // ✅ Animasi spinner berputar cepat sebelum berhenti di indikator
     let rotation = 0;
     let fastSpins = 5;
     let spinSpeed = 150;
@@ -60,7 +59,6 @@ function scanToken() {
             fastSpins--;
             setTimeout(animateFastSpin, spinSpeed);
         } else {
-            // ✅ Fetch data dari backend (TIDAK DIUBAH)
             fetch(`https://micinscore.vercel.app/api/audit/${tokenAddress}`)
                 .then(response => response.json())
                 .then(data => {
@@ -118,15 +116,14 @@ function scanToken() {
     animateFastSpin();
 }
 
-// ✅ **Perbaikan HANYA untuk Early Radar** ✅
+// ✅ Fungsi untuk mengambil data Early Radar saat tombol diklik
 async function fetchEarlyRadar() {
     const radarContainer = document.getElementById("early-radar-list");
-
-    // **Reset container hanya saat tombol diklik**
     radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
 
     try {
         console.log("📡 Fetching Early Radar data...");
+
         const response = await fetch(`https://micinscore.vercel.app/api/early-radar?t=${Date.now()}`, {
             method: "GET",
             headers: {
@@ -145,7 +142,6 @@ async function fetchEarlyRadar() {
             return;
         }
 
-        // ✅ Reset isi container sebelum menampilkan token baru
         radarContainer.innerHTML = "";
 
         data.tokens.forEach(token => {
@@ -169,13 +165,4 @@ async function fetchEarlyRadar() {
         console.error("❌ Error fetching early radar data:", error);
         radarContainer.innerHTML = `<p>⚠️ Failed to load early tokens. Please try again later.</p>`;
     }
-}
-
-// ✅ Fungsi Copy ke Clipboard (TIDAK DIUBAH)
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        alert("✅ Contract Address Copied!");
-    }).catch(err => {
-        console.error("❌ Failed to copy:", err);
-    });
 }
