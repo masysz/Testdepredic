@@ -129,12 +129,21 @@ function scanToken() {
 // ✅ Fungsi untuk mengambil data Early Radar saat tombol diklik
 async function fetchEarlyRadar() {
     const radarContainer = document.getElementById("early-radar-list");
-    radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
+
+    // 🔍 Coba gunakan data yang sudah tersimpan sebelum melakukan request baru
+    const savedTokens = localStorage.getItem("earlyRadarData");
+    if (savedTokens) {
+        console.log("🔄 Using cached early radar data.");
+        displayEarlyRadar(JSON.parse(savedTokens));
+        return;
+    }
+
+    if (!radarContainer.innerHTML.includes("early-radar-token")) {
+        radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
+    }
 
     try {
         console.log("📡 Fetching Early Radar data...");
-
-        // Gunakan timestamp di URL untuk menghindari cache browser
         const response = await fetch(`https://micinscore.vercel.app/api/early-radar?t=${Date.now()}`, {
             method: "GET",
             headers: {
@@ -147,31 +156,46 @@ async function fetchEarlyRadar() {
         const data = await response.json();
         console.log("📊 Early Radar API Response:", data);
 
-        if (data.status !== "success" || !data.tokens || data.tokens.length === 0) {
+        if (!data.tokens || data.tokens.length === 0) {
             console.warn("⚠️ No tokens found in API response.");
             radarContainer.innerHTML = `<p>🚫 No early tokens found at the moment.</p>`;
             return;
         }
 
-        // ✅ Reset isi container sebelum menambahkan token baru
-        radarContainer.innerHTML = "";
+        // ✅ Simpan hasil response agar bisa digunakan kembali
+        localStorage.setItem("earlyRadarData", JSON.stringify(data.tokens));
 
-        data.tokens.forEach(token => {
-            radarContainer.innerHTML += `
-                <div class="early-radar-token">
-                    <img src="${token.icon}" alt="${token.token}" class="token-icon">
-                    <div class="token-info">
-                        <a href="${token.url}" target="_blank"><strong>${token.token.slice(0, 4)}...${token.token.slice(-4)}</strong></a>
-                        <button class="copy-btn" onclick="copyToClipboard('${token.token}')">📋</button>
-                        <p>🛡️ Score: <strong>${token.score}</strong> | 💰 Liquidity: <strong>$${token.liquidity.toLocaleString()}</strong></p>
-                        <p>📊 Volume: <strong>$${token.volume.toLocaleString()}</strong> | ⚠️ Risk: <strong>${token.risk}</strong></p>
-                        <div class="token-links">
-                            ${token.socialLinks.map(link => `<a href="${link.url}" target="_blank">🔗 ${link.label || link.type}</a>`).join(" ")}
-                        </div>
+        // ✅ Tampilkan hasil
+        displayEarlyRadar(data.tokens);
+
+    } catch (error) {
+        console.error("❌ Error fetching early radar data:", error);
+        radarContainer.innerHTML = `<p>⚠️ Failed to load early tokens. Please try again later.</p>`;
+    }
+}
+
+// ✅ Fungsi menampilkan hasil tanpa menghapus data lama sembarangan
+function displayEarlyRadar(tokens) {
+    const radarContainer = document.getElementById("early-radar-list");
+    radarContainer.innerHTML = ""; // Hapus hanya jika ada data baru
+
+    tokens.forEach(token => {
+        radarContainer.innerHTML += `
+            <div class="early-radar-token">
+                <img src="${token.icon}" alt="${token.token}" class="token-icon">
+                <div class="token-info">
+                    <a href="${token.url}" target="_blank"><strong>${token.token.slice(0, 4)}...${token.token.slice(-4)}</strong></a>
+                    <button class="copy-btn" onclick="copyToClipboard('${token.token}')">📋</button>
+                    <p>🛡️ Score: <strong>${token.score}</strong> | 💰 Liquidity: <strong>$${token.liquidity.toLocaleString()}</strong></p>
+                    <p>📊 Volume: <strong>$${token.volume.toLocaleString()}</strong> | ⚠️ Risk: <strong>${token.risk}</strong></p>
+                    <div class="token-links">
+                        ${token.socialLinks.map(link => `<a href="${link.url}" target="_blank">🔗 ${link.label || link.type}</a>`).join(" ")}
                     </div>
                 </div>
-            `;
-        });
+            </div>
+        `;
+    });
+}
 
     } catch (error) {
         console.error("❌ Error fetching early radar data:", error);
