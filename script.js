@@ -174,10 +174,10 @@ async function fetchEarlyRadar() {
     }
 }
 
-// ✅ Fungsi menampilkan hasil tanpa menghapus data lama sembarangan
+// ✅ Fungsi menampilkan hasil
 function displayEarlyRadar(tokens) {
     const radarContainer = document.getElementById("early-radar-list");
-    radarContainer.innerHTML = ""; // Hapus hanya jika ada data baru
+    radarContainer.innerHTML = ""; 
 
     tokens.forEach(token => {
         radarContainer.innerHTML += `
@@ -185,29 +185,8 @@ function displayEarlyRadar(tokens) {
                 <img src="${token.icon}" alt="${token.token}" class="token-icon">
                 <div class="token-info">
                     <a href="${token.url}" target="_blank"><strong>${token.token.slice(0, 4)}...${token.token.slice(-4)}</strong></a>
-                    <button class="copy-btn" onclick="copyToClipboard('${token.token}')">📋</button>
-                    <p>🛡️ Score: <strong>${token.score}</strong> | 💰 Liquidity: <strong>$${token.liquidity.toLocaleString()}</strong></p>
-                    <p>📊 Volume: <strong>$${token.volume.toLocaleString()}</strong> | ⚠️ Risk: <strong>${token.risk}</strong></p>
-                    <div class="token-links">
-                        ${token.socialLinks.map(link => `<a href="${link.url}" target="_blank">🔗 ${link.label || link.type}</a>`).join(" ")}
-                    </div>
                 </div>
             </div>
         `;
-    });
-}
-
-    } catch (error) {
-        console.error("❌ Error fetching early radar data:", error);
-        radarContainer.innerHTML = `<p>⚠️ Failed to load early tokens. Please try again later.</p>`;
-    }
-}
-
-// ✅ Fungsi Copy ke Clipboard
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        alert("✅ Contract Address Copied!");
-    }).catch(err => {
-        console.error("❌ Failed to copy:", err);
     });
 }
