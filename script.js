@@ -118,22 +118,28 @@ function scanToken() {
     animateFastSpin();
 }
 
-// ✅ Function untuk mengambil data Early Radar
-async function fetchEarlyRadar() {
+// ✅ Function untuk mengambil data Early Radar dengan Retry Mechanism
+async function fetchEarlyRadar(retryCount = 3, delay = 2000) {
     const radarContainer = document.getElementById("early-radar-list");
     radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
 
     try {
         console.log("📡 Fetching Early Radar data...");
         
-        const response = await fetch("https://micinscore.vercel.app/api/early-radar"); // 🔥 API backend
+        const response = await fetch("https://micinscore.vercel.app/api/early-radar");
         const data = await response.json();
 
-        console.log("📊 Early Radar API Response:", data); // 🔍 Debug hasil API
+        console.log("📊 Early Radar API Response:", data);
 
         if (data.status !== "success" || !data.tokens || data.tokens.length === 0) {
             console.warn("⚠️ No tokens found in API response.");
-            radarContainer.innerHTML = `<p>🚫 No early tokens found at the moment.</p>`;
+
+            if (retryCount > 0) {
+                console.log(`🔄 Retrying fetch... Attempts left: ${retryCount}`);
+                setTimeout(() => fetchEarlyRadar(retryCount - 1, delay), delay);
+            } else {
+                radarContainer.innerHTML = `<p>🚫 No early tokens found at the moment.</p>`;
+            }
             return;
         }
 
@@ -155,7 +161,13 @@ async function fetchEarlyRadar() {
 
     } catch (error) {
         console.error("❌ Error fetching early radar data:", error);
-        radarContainer.innerHTML = `<p>⚠️ Failed to load early tokens. Please try again later.</p>`;
+
+        if (retryCount > 0) {
+            console.log(`🔄 Retrying fetch... Attempts left: ${retryCount}`);
+            setTimeout(() => fetchEarlyRadar(retryCount - 1, delay), delay);
+        } else {
+            radarContainer.innerHTML = `<p>⚠️ Failed to load early tokens. Please try again later.</p>`;
+        }
     }
 }
 
