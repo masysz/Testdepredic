@@ -182,12 +182,13 @@ function displayEarlyRadar(tokens) {
     tokens.forEach(token => {
         const tokenId = `copy-${token.token}`; // ID unik untuk tombol copy
 
-        radarContainer.innerHTML += `
+        // ✅ Tambahkan elemen dengan insertAdjacentHTML agar masuk ke DOM satu per satu
+        radarContainer.insertAdjacentHTML("beforeend", `
             <div class="early-radar-token">
                 <img src="${token.icon}" alt="${token.token}" class="token-icon">
                 <div class="token-info">
                     <a href="${token.url}" target="_blank"><strong>${token.token.slice(0, 4)}...${token.token.slice(-4)}</strong></a>
-                    <button class="copy-btn" id="${tokenId}">📋</button>
+                    <button class="copy-btn" id="${tokenId}" data-token="${token.token}">📋</button>
                     <p>🛡️ Score: <strong>${token.score}</strong> | 💰 Liquidity: <strong>$${token.liquidity.toLocaleString()}</strong></p>
                     <p>📊 Volume: <strong>$${token.volume.toLocaleString()}</strong> | ⚠️ Risk: <strong>${token.risk}</strong></p>
                     <div class="token-links">
@@ -195,14 +196,14 @@ function displayEarlyRadar(tokens) {
                     </div>
                 </div>
             </div>
-        `;
+        `);
+    });
 
-        // ✅ Tambahkan event listener ke tombol copy setelah elemen dibuat
-        setTimeout(() => {
-            const copyButton = document.getElementById(tokenId);
-            if (copyButton) {
-                copyButton.addEventListener("click", () => copyToClipboard(token.token));
-            }
-        }, 100); // Beri jeda kecil agar elemen sudah ada di DOM
+    // ✅ Event delegation untuk menangani klik tombol copy (Agar tetap berfungsi meskipun elemen dibuat secara dinamis)
+    radarContainer.addEventListener("click", event => {
+        if (event.target.classList.contains("copy-btn")) {
+            const contractAddress = event.target.getAttribute("data-token");
+            copyToClipboard(contractAddress);
+        }
     });
 }
