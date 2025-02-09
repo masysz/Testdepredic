@@ -124,10 +124,15 @@ async function fetchEarlyRadar() {
     radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
 
     try {
-        const response = await fetch("https://micinscore.vercel.app/api/early-radar");
+        console.log("📡 Fetching Early Radar data...");
+        
+        const response = await fetch("https://micinscore.vercel.app/api/early-radar"); // 🔥 API backend
         const data = await response.json();
 
+        console.log("📊 Early Radar API Response:", data); // 🔍 Debug hasil API
+
         if (data.status !== "success" || !data.tokens || data.tokens.length === 0) {
+            console.warn("⚠️ No tokens found in API response.");
             radarContainer.innerHTML = `<p>🚫 No early tokens found at the moment.</p>`;
             return;
         }
@@ -138,7 +143,7 @@ async function fetchEarlyRadar() {
                 <img src="${token.icon}" alt="${token.token}" class="token-icon">
                 <div class="token-info">
                     <a href="${token.url}" target="_blank"><strong>${token.token.slice(0, 4)}...${token.token.slice(-4)}</strong></a>
-                    <span class="copy-icon" onclick="copyToClipboard('${token.token}')">📋</span>
+                    <button class="copy-btn" onclick="copyToClipboard('${token.token}')">📋</button>
                     <p>🛡️ Score: <strong>${token.score}</strong> | 💰 Liquidity: <strong>$${token.liquidity.toLocaleString()}</strong></p>
                     <p>📊 Volume: <strong>$${token.volume.toLocaleString()}</strong> | ⚠️ Risk: <strong>${token.risk}</strong></p>
                     <div class="token-links">
@@ -154,10 +159,10 @@ async function fetchEarlyRadar() {
     }
 }
 
-// ✅ Function untuk copy contract ke clipboard
-function copyToClipboard(contractAddress) {
-    navigator.clipboard.writeText(contractAddress).then(() => {
-        alert(`📋 Copied: ${contractAddress}`);
+// ✅ Fungsi Copy ke Clipboard
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        alert("✅ Contract Address Copied!");
     }).catch(err => {
         console.error("❌ Failed to copy:", err);
     });
