@@ -4,26 +4,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const scanButton = document.getElementById("scanButton");
     const tokenInput = document.getElementById("tokenInput");
     const spinnerIndicator = document.querySelector(".indicator");
+    const earlyRadarButton = document.getElementById("earlyRadarButton");
 
-    if (!scanButton || !tokenInput || !spinnerIndicator) {
+    if (!scanButton || !tokenInput || !spinnerIndicator || !earlyRadarButton) {
         console.error("❌ Missing elements in DOM!");
         return;
     }
 
-    // ✅ Animasi idle: Spinner berputar perlahan sebelum scanning
+    // ✅ Animasi idle: Spinner berputar perlahan sebelum scanning (TIDAK DIUBAH)
     spinnerIndicator.classList.add("idle-spin");
 
-    // ✅ Tambahkan event listener tombol scan
+    // ✅ Event listener tombol scan (Audit dengan Spinner, TIDAK DIUBAH)
     scanButton.addEventListener("click", () => {
         console.log("📌 Scan button clicked!");
         scanToken();
     });
 
-    // ✅ Jalankan Early Radar saat halaman dimuat
-    fetchEarlyRadar();
+    // ✅ Event listener tombol "Show Tokens" (Early Radar, PERBAIKAN)
+    earlyRadarButton.addEventListener("click", () => {
+        console.log("🚀 Show Tokens button clicked!");
+        fetchEarlyRadar();
+    });
 });
 
-// ✅ Fungsi untuk melakukan scanning token
+// ✅ **Sistem Audit & Spinner (TIDAK DIUBAH)** ✅
 function scanToken() {
     console.log("🔍 Starting token scan...");
 
@@ -41,22 +45,22 @@ function scanToken() {
     console.log(`🔎 Fetching data for token: ${tokenAddress}`);
     resultDiv.innerHTML = "<p>🔍 Scanning...</p>";
 
-    // ✅ Hentikan animasi idle sebelum scanning
+    // ✅ Hentikan animasi idle sebelum scanning (TIDAK DIUBAH)
     spinnerIndicator.classList.remove("idle-spin");
 
-    // ✅ Animasi spinner berputar cepat sebelum berhenti di indikator
+    // ✅ Animasi spinner berputar cepat sebelum berhenti di indikator (TIDAK DIUBAH)
     let rotation = 0;
-    let fastSpins = 5; // Jumlah putaran cepat
-    let spinSpeed = 150; // Kecepatan awal (ms)
+    let fastSpins = 5;
+    let spinSpeed = 150;
 
     function animateFastSpin() {
         if (fastSpins > 0) {
-            rotation += 360; // Putar penuh setiap iterasi
+            rotation += 360;
             spinnerIndicator.style.transform = `rotate(${rotation}deg)`;
             fastSpins--;
             setTimeout(animateFastSpin, spinSpeed);
         } else {
-            // Setelah putaran cepat selesai, ambil data dari API
+            // ✅ Fetch data dari backend (TIDAK DIUBAH)
             fetch(`https://micinscore.vercel.app/api/audit/${tokenAddress}`)
                 .then(response => response.json())
                 .then(data => {
@@ -72,22 +76,20 @@ function scanToken() {
                     let resultSymbol = "";
                     let finalRotation = 0;
 
-                    // ✅ Tentukan posisi akhir jarum berdasarkan skor & tambahkan simbol
                     if (score >= 76) {
-                        finalRotation = 0; // Buy (Atas)
+                        finalRotation = 0;
                         resultSymbol = "🟢 Buy";
                     } else if (score >= 51) {
-                        finalRotation = 270; // Potential (Kanan)
+                        finalRotation = 270;
                         resultSymbol = "🟡 Potential";
                     } else if (score >= 26) {
-                        finalRotation = 180; // Sell (Bawah)
+                        finalRotation = 180;
                         resultSymbol = "🔴 Sell";
                     } else {
-                        finalRotation = 90; // Looking (Kiri)
+                        finalRotation = 90;
                         resultSymbol = "⚠️ Looking";
                     }
 
-                    // ✅ Format tampilan hasil scan
                     let detailsHTML = `<h3>🔍 Token Audit Result</h3>`;
                     detailsHTML += `<p><strong>Score:</strong> ${score} - <strong>${resultSymbol}</strong></p>`;
                     detailsHTML += `<p><strong>Risk Level:</strong> ${riskLevel}</p>`;
@@ -101,7 +103,6 @@ function scanToken() {
                     detailsHTML += `</ul>`;
                     resultDiv.innerHTML = detailsHTML;
 
-                    // ✅ Putar jarum ke posisi akhir dengan efek transisi halus
                     setTimeout(() => {
                         spinnerIndicator.style.transition = "transform 2s ease-out";
                         spinnerIndicator.style.transform = `rotate(${finalRotation}deg)`;
@@ -114,27 +115,18 @@ function scanToken() {
         }
     }
 
-    // ✅ Mulai animasi putaran cepat sebelum mengambil data API
     animateFastSpin();
 }
 
-
-
-  // ✅ Event listener untuk early radar
-    earlyRadarButton.addEventListener("click", () => {
-        console.log("🚀 Show Tokens button clicked!");
-        fetchEarlyRadar();
-    });
-
-// ✅ Fungsi untuk mengambil data Early Radar saat tombol diklik
+// ✅ **Perbaikan HANYA untuk Early Radar** ✅
 async function fetchEarlyRadar() {
     const radarContainer = document.getElementById("early-radar-list");
+
+    // **Reset container hanya saat tombol diklik**
     radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
 
     try {
         console.log("📡 Fetching Early Radar data...");
-
-        // Gunakan timestamp di URL untuk menghindari cache browser
         const response = await fetch(`https://micinscore.vercel.app/api/early-radar?t=${Date.now()}`, {
             method: "GET",
             headers: {
@@ -153,7 +145,7 @@ async function fetchEarlyRadar() {
             return;
         }
 
-        // ✅ Reset isi container sebelum menambahkan token baru
+        // ✅ Reset isi container sebelum menampilkan token baru
         radarContainer.innerHTML = "";
 
         data.tokens.forEach(token => {
@@ -179,7 +171,7 @@ async function fetchEarlyRadar() {
     }
 }
 
-// ✅ Fungsi Copy ke Clipboard
+// ✅ Fungsi Copy ke Clipboard (TIDAK DIUBAH)
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
         alert("✅ Contract Address Copied!");
