@@ -4,8 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const scanButton = document.getElementById("scanButton");
     const tokenInput = document.getElementById("tokenInput");
     const spinnerIndicator = document.querySelector(".indicator");
+    const earlyRadarButton = document.getElementById("earlyRadarButton");
 
-    if (!scanButton || !tokenInput || !spinnerIndicator) {
+    if (!scanButton || !tokenInput || !spinnerIndicator || !earlyRadarButton) {
         console.error("❌ Missing elements in DOM!");
         return;
     }
@@ -13,20 +14,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // ✅ Animasi idle: Spinner berputar perlahan sebelum scanning
     spinnerIndicator.classList.add("idle-spin");
 
-    // ✅ Tambahkan event listener tombol scan
+    // ✅ Event listener tombol scan (Audit dengan Spinner, TIDAK DIUBAH)
     scanButton.addEventListener("click", () => {
         console.log("📌 Scan button clicked!");
         scanToken();
     });
 
- ✅ Event listener tombol "Show Tokens" (Early Radar)
+    // ✅ Event listener tombol "Show Tokens" (Early Radar)
     earlyRadarButton.addEventListener("click", () => {
         console.log("🚀 Show Tokens button clicked!");
         fetchEarlyRadar();
     });
 });
 
-// ✅ Fungsi untuk melakukan scanning token
+// ✅ Fungsi untuk melakukan scanning token (Audit dengan Spinner, TIDAK DIUBAH)
 function scanToken() {
     console.log("🔍 Starting token scan...");
 
@@ -49,12 +50,12 @@ function scanToken() {
 
     // ✅ Animasi spinner berputar cepat sebelum berhenti di indikator
     let rotation = 0;
-    let fastSpins = 5; // Jumlah putaran cepat
-    let spinSpeed = 150; // Kecepatan awal (ms)
+    let fastSpins = 5;
+    let spinSpeed = 150;
 
     function animateFastSpin() {
         if (fastSpins > 0) {
-            rotation += 360; // Putar penuh setiap iterasi
+            rotation += 360;
             spinnerIndicator.style.transform = `rotate(${rotation}deg)`;
             fastSpins--;
             setTimeout(animateFastSpin, spinSpeed);
@@ -75,22 +76,20 @@ function scanToken() {
                     let resultSymbol = "";
                     let finalRotation = 0;
 
-                    // ✅ Tentukan posisi akhir jarum berdasarkan skor & tambahkan simbol
                     if (score >= 76) {
-                        finalRotation = 0; // Buy (Atas)
+                        finalRotation = 0;
                         resultSymbol = "🟢 Buy";
                     } else if (score >= 51) {
-                        finalRotation = 270; // Potential (Kanan)
+                        finalRotation = 270;
                         resultSymbol = "🟡 Potential";
                     } else if (score >= 26) {
-                        finalRotation = 180; // Sell (Bawah)
+                        finalRotation = 180;
                         resultSymbol = "🔴 Sell";
                     } else {
-                        finalRotation = 90; // Looking (Kiri)
+                        finalRotation = 90;
                         resultSymbol = "⚠️ Looking";
                     }
 
-                    // ✅ Format tampilan hasil scan
                     let detailsHTML = `<h3>🔍 Token Audit Result</h3>`;
                     detailsHTML += `<p><strong>Score:</strong> ${score} - <strong>${resultSymbol}</strong></p>`;
                     detailsHTML += `<p><strong>Risk Level:</strong> ${riskLevel}</p>`;
@@ -104,7 +103,6 @@ function scanToken() {
                     detailsHTML += `</ul>`;
                     resultDiv.innerHTML = detailsHTML;
 
-                    // ✅ Putar jarum ke posisi akhir dengan efek transisi halus
                     setTimeout(() => {
                         spinnerIndicator.style.transition = "transform 2s ease-out";
                         spinnerIndicator.style.transform = `rotate(${finalRotation}deg)`;
@@ -117,12 +115,8 @@ function scanToken() {
         }
     }
 
-    // ✅ Mulai animasi putaran cepat sebelum mengambil data API
     animateFastSpin();
 }
-
-
-
 
 // ✅ Fungsi untuk mengambil data Early Radar saat tombol diklik
 async function fetchEarlyRadar() {
