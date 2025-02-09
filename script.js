@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchEarlyRadar();
 });
 
-// ✅ Fungsi untuk melakukan scanning token (tidak diubah)
+// ✅ Fungsi untuk melakukan scanning token
 function scanToken() {
     console.log("🔍 Starting token scan...");
 
@@ -118,20 +118,26 @@ function scanToken() {
     animateFastSpin();
 }
 
-// ✅ Function untuk mengambil data Early Radar dengan Retry Mechanism
+// ✅ Function untuk mengambil data Early Radar dengan mekanisme retry & cache bypass
 async function fetchEarlyRadar(retryCount = 3, delay = 2000) {
     const radarContainer = document.getElementById("early-radar-list");
     radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
 
     try {
         console.log("📡 Fetching Early Radar data...");
-        
-        const response = await fetch("https://micinscore.vercel.app/api/early-radar");
-        const data = await response.json();
 
+        // 🔥 Tambahkan timestamp agar fetch tidak terkena cache
+        const timestamp = new Date().getTime();
+        const response = await fetch(`https://micinscore.vercel.app/api/early-radar?t=${timestamp}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`);
+        }
+
+        const data = await response.json();
         console.log("📊 Early Radar API Response:", data);
 
-        if (data.status !== "success" || !data.tokens || data.tokens.length === 0) {
+        if (data.status !== "success" || !Array.isArray(data.tokens) || data.tokens.length === 0) {
             console.warn("⚠️ No tokens found in API response.");
 
             if (retryCount > 0) {
@@ -143,7 +149,7 @@ async function fetchEarlyRadar(retryCount = 3, delay = 2000) {
             return;
         }
 
-        // 🔥 Tampilkan token di frontend
+        // 🔥 Tampilkan token di frontend dengan tampilan yang lebih rapi
         radarContainer.innerHTML = data.tokens.map(token => `
             <div class="early-radar-token">
                 <img src="${token.icon}" alt="${token.token}" class="token-icon">
