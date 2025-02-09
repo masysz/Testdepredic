@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const scanButton = document.getElementById("scanButton");
     const tokenInput = document.getElementById("tokenInput");
     const spinnerIndicator = document.querySelector(".indicator");
+    const earlyRadarButton = document.getElementById("loadEarlyRadar"); // ✅ Fix tombol
 
     if (!scanButton || !tokenInput || !spinnerIndicator) {
         console.error("❌ Missing elements in DOM!");
@@ -19,8 +20,15 @@ document.addEventListener("DOMContentLoaded", () => {
         scanToken();
     });
 
-    // ✅ Jalankan Early Radar saat halaman dimuat
-    fetchEarlyRadar();
+    // ✅ Event listener tombol Early Radar
+    if (earlyRadarButton) {
+        earlyRadarButton.addEventListener("click", () => {
+            console.log("🚀 Show Tokens button clicked!");
+            fetchEarlyRadar();
+        });
+    } else {
+        console.error("❌ Early Radar button not found in DOM!");
+    }
 });
 
 // ✅ Fungsi untuk melakukan scanning token
@@ -117,14 +125,6 @@ function scanToken() {
     // ✅ Mulai animasi putaran cepat sebelum mengambil data API
     animateFastSpin();
 }
-
-
-
-  // ✅ Event listener untuk early radar
-    earlyRadarButton.addEventListener("click", () => {
-        console.log("🚀 Show Tokens button clicked!");
-        fetchEarlyRadar();
-    });
 
 // ✅ Fungsi untuk mengambil data Early Radar saat tombol diklik
 async function fetchEarlyRadar() {
