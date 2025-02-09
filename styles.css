@@ -246,3 +246,18 @@ button:hover {
 #early-radar-list {
     margin-top: 10px;
 }
+
+#loadEarlyRadar {
+    padding: 10px 15px;
+    font-size: 14px;
+    background-color: #FFA500;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+#loadEarlyRadar:hover {
+    background-color: #FF8C00;
+}
