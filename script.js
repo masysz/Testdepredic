@@ -120,24 +120,26 @@ function scanToken() {
 
 
 
-// ✅ Function untuk mengambil data Early Radar (Mengatasi Cache Issue)
-async function fetchEarlyRadar(retryCount = 5, delay = 3000) {
+  // ✅ Event listener untuk early radar
+    earlyRadarButton.addEventListener("click", () => {
+        console.log("🚀 Show Tokens button clicked!");
+        fetchEarlyRadar();
+    });
+});
+
+// ✅ Fungsi untuk mengambil data Early Radar saat tombol diklik
+async function fetchEarlyRadar() {
     const radarContainer = document.getElementById("early-radar-list");
-    
-    if (!radarContainer.innerHTML.includes("early-radar-token")) {
-        radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
-    }
+    radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
 
     try {
         console.log("📡 Fetching Early Radar data...");
 
-        // ✅ Gunakan timestamp + header khusus untuk menghindari cache
+        // Gunakan timestamp di URL untuk menghindari cache browser
         const response = await fetch(`https://micinscore.vercel.app/api/early-radar?t=${Date.now()}`, {
             method: "GET",
             headers: {
-                "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-                "Pragma": "no-cache",
-                "Expires": "0"
+                "Cache-Control": "no-store"
             }
         });
 
@@ -148,58 +150,36 @@ async function fetchEarlyRadar(retryCount = 5, delay = 3000) {
 
         if (data.status !== "success" || !data.tokens || data.tokens.length === 0) {
             console.warn("⚠️ No tokens found in API response.");
-
-            if (retryCount > 0) {
-                console.log(`🔄 Retrying fetch... Attempts left: ${retryCount}`);
-                setTimeout(() => fetchEarlyRadar(retryCount - 1, delay), delay);
-            } else {
-                if (!radarContainer.innerHTML.includes("early-radar-token")) {
-                    radarContainer.innerHTML = `<p>🚫 No early tokens found at the moment.</p>`;
-                }
-            }
+            radarContainer.innerHTML = `<p>🚫 No early tokens found at the moment.</p>`;
             return;
         }
 
-        // ✅ Pastikan UI tidak duplikat
+        // ✅ Reset isi container sebelum menambahkan token baru
         radarContainer.innerHTML = "";
 
         data.tokens.forEach(token => {
-            try {
-                // ✅ Cegah duplikasi
-                if (document.getElementById(`token-${token.token}`)) return;
-
-                radarContainer.innerHTML += `
-                    <div class="early-radar-token" id="token-${token.token}">
-                        <img src="${token.icon}" alt="${token.token}" class="token-icon">
-                        <div class="token-info">
-                            <a href="${token.url}" target="_blank"><strong>${token.token.slice(0, 4)}...${token.token.slice(-4)}</strong></a>
-                            <button class="copy-btn" onclick="copyToClipboard('${token.token}')">📋</button>
-                            <p>🛡️ Score: <strong>${token.score}</strong> | 💰 Liquidity: <strong>$${token.liquidity.toLocaleString()}</strong></p>
-                            <p>📊 Volume: <strong>$${token.volume.toLocaleString()}</strong> | ⚠️ Risk: <strong>${token.risk}</strong></p>
-                            <div class="token-links">
-                                ${token.socialLinks.map(link => `<a href="${link.url}" target="_blank">🔗 ${link.label || link.type}</a>`).join(" ")}
-                            </div>
+            radarContainer.innerHTML += `
+                <div class="early-radar-token">
+                    <img src="${token.icon}" alt="${token.token}" class="token-icon">
+                    <div class="token-info">
+                        <a href="${token.url}" target="_blank"><strong>${token.token.slice(0, 4)}...${token.token.slice(-4)}</strong></a>
+                        <button class="copy-btn" onclick="copyToClipboard('${token.token}')">📋</button>
+                        <p>🛡️ Score: <strong>${token.score}</strong> | 💰 Liquidity: <strong>$${token.liquidity.toLocaleString()}</strong></p>
+                        <p>📊 Volume: <strong>$${token.volume.toLocaleString()}</strong> | ⚠️ Risk: <strong>${token.risk}</strong></p>
+                        <div class="token-links">
+                            ${token.socialLinks.map(link => `<a href="${link.url}" target="_blank">🔗 ${link.label || link.type}</a>`).join(" ")}
                         </div>
                     </div>
-                `;
-            } catch (error) {
-                console.error("⚠️ Error rendering token:", error);
-            }
+                </div>
+            `;
         });
 
     } catch (error) {
         console.error("❌ Error fetching early radar data:", error);
-
-        if (retryCount > 0) {
-            console.log(`🔄 Retrying fetch... Attempts left: ${retryCount}`);
-            setTimeout(() => fetchEarlyRadar(retryCount - 1, delay), delay);
-        } else {
-            if (!radarContainer.innerHTML.includes("early-radar-token")) {
-                radarContainer.innerHTML = `<p>⚠️ Failed to load early tokens. Please try again later.</p>`;
-            }
-        }
+        radarContainer.innerHTML = `<p>⚠️ Failed to load early tokens. Please try again later.</p>`;
     }
 }
+
 // ✅ Fungsi Copy ke Clipboard
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
