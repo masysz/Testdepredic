@@ -174,18 +174,20 @@ async function fetchEarlyRadar() {
     }
 }
 
-// ✅ Fungsi menampilkan hasil lengkap di Early Radar
+// ✅ Fungsi menampilkan hasil lengkap di Early Radar (FIX Tombol Copy)
 function displayEarlyRadar(tokens) {
     const radarContainer = document.getElementById("early-radar-list");
     radarContainer.innerHTML = ""; // Hapus isi sebelumnya sebelum menampilkan yang baru
 
     tokens.forEach(token => {
+        const tokenId = `copy-${token.token}`; // ID unik untuk tombol copy
+
         radarContainer.innerHTML += `
             <div class="early-radar-token">
                 <img src="${token.icon}" alt="${token.token}" class="token-icon">
                 <div class="token-info">
                     <a href="${token.url}" target="_blank"><strong>${token.token.slice(0, 4)}...${token.token.slice(-4)}</strong></a>
-                    <button class="copy-btn" onclick="copyToClipboard('${token.token}')">📋</button>
+                    <button class="copy-btn" id="${tokenId}">📋</button>
                     <p>🛡️ Score: <strong>${token.score}</strong> | 💰 Liquidity: <strong>$${token.liquidity.toLocaleString()}</strong></p>
                     <p>📊 Volume: <strong>$${token.volume.toLocaleString()}</strong> | ⚠️ Risk: <strong>${token.risk}</strong></p>
                     <div class="token-links">
@@ -194,5 +196,13 @@ function displayEarlyRadar(tokens) {
                 </div>
             </div>
         `;
+
+        // ✅ Tambahkan event listener ke tombol copy setelah elemen dibuat
+        setTimeout(() => {
+            const copyButton = document.getElementById(tokenId);
+            if (copyButton) {
+                copyButton.addEventListener("click", () => copyToClipboard(token.token));
+            }
+        }, 100); // Beri jeda kecil agar elemen sudah ada di DOM
     });
 }
