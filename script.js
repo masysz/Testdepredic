@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const scanButton = document.getElementById("scanButton");
     const tokenInput = document.getElementById("tokenInput");
     const spinnerIndicator = document.querySelector(".indicator");
-    const earlyRadarButton = document.getElementById("earlyRadarButton"); // 🔥 FIX! Pastikan tombol ada
+    const earlyRadarButton = document.getElementById("earlyRadarButton"); // ✅ Pastikan tombol ditemukan
 
     if (!scanButton || !tokenInput || !spinnerIndicator || !earlyRadarButton) {
         console.error("❌ Missing elements in DOM!");
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-// ✅ Fungsi untuk melakukan scanning token (Tidak diubah!)
+// ✅ TIDAK ADA PERUBAHAN PADA FUNGSI AUDIT & SPINNER (BIARKAN BERJALAN SEPERTI SEBELUMNYA)
 function scanToken() {
     console.log("🔍 Starting token scan...");
     const tokenInput = document.getElementById("tokenInput");
@@ -116,7 +116,7 @@ function scanToken() {
     animateFastSpin();
 }
 
-// ✅ Fungsi untuk mengambil data Early Radar saat tombol diklik
+// ✅ **PERBAIKAN FINAL UNTUK EARLY RADAR**
 async function fetchEarlyRadar() {
     const radarContainer = document.getElementById("early-radar-list");
     radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
@@ -165,4 +165,13 @@ async function fetchEarlyRadar() {
         console.error("❌ Error fetching early radar data:", error);
         radarContainer.innerHTML = `<p>⚠️ Failed to load early tokens. Please try again later.</p>`;
     }
+}
+
+// ✅ Fungsi Copy ke Clipboard
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        alert("✅ Contract Address Copied!");
+    }).catch(err => {
+        console.error("❌ Failed to copy:", err);
+    });
 }
