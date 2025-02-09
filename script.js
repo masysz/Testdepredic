@@ -124,7 +124,7 @@ async function fetchEarlyRadar() {
     radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
 
     try {
-        const response = await fetch("https://micinscore.vercel.app/api/early-radar"); // 🔥 API backend
+        const response = await fetch("https://micinscore.vercel.app/api/early-radar");
         const data = await response.json();
 
         if (data.status !== "success" || !data.tokens || data.tokens.length === 0) {
@@ -137,12 +137,13 @@ async function fetchEarlyRadar() {
             <div class="early-radar-token">
                 <img src="${token.icon}" alt="${token.token}" class="token-icon">
                 <div class="token-info">
-                    <a href="${token.url}" target="_blank"><strong>${token.token}</strong></a>
+                    <a href="${token.url}" target="_blank"><strong>${token.token.slice(0, 4)}...${token.token.slice(-4)}</strong></a>
+                    <span class="copy-icon" onclick="copyToClipboard('${token.token}')">📋</span>
                     <p>🛡️ Score: <strong>${token.score}</strong> | 💰 Liquidity: <strong>$${token.liquidity.toLocaleString()}</strong></p>
                     <p>📊 Volume: <strong>$${token.volume.toLocaleString()}</strong> | ⚠️ Risk: <strong>${token.risk}</strong></p>
-                </div>
-                <div class="token-links">
-                    ${token.socialLinks.map(link => `<a href="${link.url}" target="_blank">🔗 ${link.label || link.type}</a>`).join(" ")}
+                    <div class="token-links">
+                        ${token.socialLinks.map(link => `<a href="${link.url}" target="_blank">🔗 ${link.label || link.type}</a>`).join(" ")}
+                    </div>
                 </div>
             </div>
         `).join("");
@@ -151,4 +152,13 @@ async function fetchEarlyRadar() {
         console.error("❌ Error fetching early radar data:", error);
         radarContainer.innerHTML = `<p>⚠️ Failed to load early tokens. Please try again later.</p>`;
     }
+}
+
+// ✅ Function untuk copy contract ke clipboard
+function copyToClipboard(contractAddress) {
+    navigator.clipboard.writeText(contractAddress).then(() => {
+        alert(`📋 Copied: ${contractAddress}`);
+    }).catch(err => {
+        console.error("❌ Failed to copy:", err);
+    });
 }
