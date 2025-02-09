@@ -125,7 +125,6 @@ function scanToken() {
         console.log("🚀 Show Tokens button clicked!");
         fetchEarlyRadar();
     });
-});
 
 // ✅ Fungsi untuk mengambil data Early Radar saat tombol diklik
 async function fetchEarlyRadar() {
