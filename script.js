@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // ✅ Animasi idle: Spinner berputar perlahan sebelum scanning
+    // ✅ Animasi idle: Spinner berputar perlahan sebelum scanning (TIDAK DIUBAH)
     spinnerIndicator.classList.add("idle-spin");
 
     // ✅ Event listener tombol scan (Audit dengan Spinner, TIDAK DIUBAH)
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-// ✅ Fungsi untuk melakukan scanning token (Audit dengan Spinner, TIDAK DIUBAH)
+// ✅ **Sistem Audit & Spinner (TIDAK DIUBAH)** ✅
 function scanToken() {
     console.log("🔍 Starting token scan...");
 
@@ -45,10 +45,10 @@ function scanToken() {
     console.log(`🔎 Fetching data for token: ${tokenAddress}`);
     resultDiv.innerHTML = "<p>🔍 Scanning...</p>";
 
-    // ✅ Hentikan animasi idle sebelum scanning
+    // ✅ Hentikan animasi idle sebelum scanning (TIDAK DIUBAH)
     spinnerIndicator.classList.remove("idle-spin");
 
-    // ✅ Animasi spinner berputar cepat sebelum berhenti di indikator
+    // ✅ Animasi spinner berputar cepat sebelum berhenti di indikator (TIDAK DIUBAH)
     let rotation = 0;
     let fastSpins = 5;
     let spinSpeed = 150;
@@ -60,7 +60,7 @@ function scanToken() {
             fastSpins--;
             setTimeout(animateFastSpin, spinSpeed);
         } else {
-            // Setelah putaran cepat selesai, ambil data dari API
+            // ✅ Fetch data dari backend (TIDAK DIUBAH)
             fetch(`https://micinscore.vercel.app/api/audit/${tokenAddress}`)
                 .then(response => response.json())
                 .then(data => {
@@ -118,11 +118,11 @@ function scanToken() {
     animateFastSpin();
 }
 
-// ✅ Fungsi untuk mengambil data Early Radar saat tombol diklik
+// ✅ **Perbaikan HANYA untuk Early Radar** ✅
 async function fetchEarlyRadar() {
     const radarContainer = document.getElementById("early-radar-list");
 
-    // **Jika data sudah ada, tidak perlu fetch ulang**
+    // **Hindari fetch ulang jika data sudah ada**
     if (radarContainer.innerHTML.includes("early-radar-token")) {
         console.log("✅ Early Radar sudah dimuat, tidak perlu fetch ulang.");
         return;
@@ -150,7 +150,7 @@ async function fetchEarlyRadar() {
             return;
         }
 
-        // ✅ Reset isi container sebelum menambahkan token baru
+        // ✅ Reset isi container sebelum menampilkan token baru
         radarContainer.innerHTML = "";
 
         data.tokens.forEach(token => {
@@ -176,7 +176,7 @@ async function fetchEarlyRadar() {
     }
 }
 
-// ✅ Fungsi Copy ke Clipboard
+// ✅ Fungsi Copy ke Clipboard (TIDAK DIUBAH)
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
         alert("✅ Contract Address Copied!");
