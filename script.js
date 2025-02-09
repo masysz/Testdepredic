@@ -118,30 +118,41 @@ function scanToken() {
     animateFastSpin();
 }
 
-// ✅ Function untuk mengambil data Early Radar dengan Perbaikan Data Handling
-async function fetchEarlyRadar(retryCount = 3, delay = 2000) {
+ // ✅ Jalankan Early Radar
+    fetchEarlyRadar();
+});
+
+// ✅ Function untuk mengambil data Early Radar (Final Fix)
+async function fetchEarlyRadar(retryCount = 5, delay = 3000) {
     const radarContainer = document.getElementById("early-radar-list");
-    radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
+    
+    if (!radarContainer.innerHTML.includes("early-radar-token")) {
+        radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
+    }
 
     try {
         console.log("📡 Fetching Early Radar data...");
 
-        // 🔥 Tambahkan timestamp agar cache tidak digunakan
+        // Gunakan timestamp + cache control untuk menghindari cache browser
         const response = await fetch(`https://micinscore.vercel.app/api/early-radar?t=${Date.now()}`, {
-            cache: "no-store"
+            method: "GET",
+            headers: {
+                "Cache-Control": "no-store"
+            }
         });
+
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const data = await response.json();
         console.log("📊 Early Radar API Response:", data);
 
-        if (!data || data.status !== "success" || !data.tokens || data.tokens.length === 0) {
+        if (data.status !== "success" || !data.tokens || data.tokens.length === 0) {
             console.warn("⚠️ No tokens found in API response.");
 
             if (retryCount > 0) {
                 console.log(`🔄 Retrying fetch... Attempts left: ${retryCount}`);
                 setTimeout(() => fetchEarlyRadar(retryCount - 1, delay), delay);
             } else {
-                // **🔥 Jangan hapus data jika sudah ada sebelumnya**
                 if (!radarContainer.innerHTML.includes("early-radar-token")) {
                     radarContainer.innerHTML = `<p>🚫 No early tokens found at the moment.</p>`;
                 }
@@ -149,14 +160,14 @@ async function fetchEarlyRadar(retryCount = 3, delay = 2000) {
             return;
         }
 
-        // **🔥 Reset list hanya jika belum ada data sebelumnya**
+        // **Hanya update UI jika belum ada data sebelumnya**
         if (!radarContainer.innerHTML.includes("early-radar-token")) {
             radarContainer.innerHTML = "";
         }
 
         data.tokens.forEach(token => {
             try {
-                // **Cegah duplikasi token**
+                // **Cegah duplikasi**
                 if (document.getElementById(`token-${token.token}`)) return;
 
                 radarContainer.innerHTML += `
@@ -185,7 +196,6 @@ async function fetchEarlyRadar(retryCount = 3, delay = 2000) {
             console.log(`🔄 Retrying fetch... Attempts left: ${retryCount}`);
             setTimeout(() => fetchEarlyRadar(retryCount - 1, delay), delay);
         } else {
-            // **🔥 Jangan hapus data jika sudah ada sebelumnya**
             if (!radarContainer.innerHTML.includes("early-radar-token")) {
                 radarContainer.innerHTML = `<p>⚠️ Failed to load early tokens. Please try again later.</p>`;
             }
