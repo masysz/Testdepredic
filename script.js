@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const scanButton = document.getElementById("scanButton");
     const tokenInput = document.getElementById("tokenInput");
     const spinnerIndicator = document.querySelector(".indicator");
-    const earlyRadarButton = document.getElementById("earlyRadarButton"); // ✅ Deklarasi tombol Show Tokens
+    const earlyRadarButton = document.getElementById("earlyRadarButton"); // ✅ Deklarasi tombol "Show Tokens"
 
     if (!scanButton || !tokenInput || !spinnerIndicator || !earlyRadarButton) {
         console.error("❌ Missing elements in DOM!");
@@ -14,20 +14,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // ✅ Animasi idle: Spinner berputar perlahan sebelum scanning
     spinnerIndicator.classList.add("idle-spin");
 
-    // ✅ Tambahkan event listener tombol scan
+    // ✅ Event listener tombol scan
     scanButton.addEventListener("click", () => {
         console.log("📌 Scan button clicked!");
         scanToken();
     });
 
-    // ✅ Event listener untuk tombol "Show Tokens"
+    // ✅ Event listener tombol "Show Tokens" untuk Early Radar
     earlyRadarButton.addEventListener("click", () => {
         console.log("🚀 Show Tokens button clicked!");
         fetchEarlyRadar();
     });
 });
 
-// ✅ Fungsi untuk melakukan scanning token (tidak diubah)
+// ✅ Fungsi untuk melakukan scanning token
 function scanToken() {
     console.log("🔍 Starting token scan...");
     const tokenInput = document.getElementById("tokenInput");
@@ -116,7 +116,7 @@ function scanToken() {
     animateFastSpin();
 }
 
-// ✅ Fungsi untuk mengambil data Early Radar (hanya saat tombol diklik)
+// ✅ Fungsi untuk mengambil data Early Radar saat tombol "Show Tokens" diklik
 async function fetchEarlyRadar() {
     const radarContainer = document.getElementById("early-radar-list");
     radarContainer.innerHTML = `<p>🔄 Loading latest early tokens...</p>`;
