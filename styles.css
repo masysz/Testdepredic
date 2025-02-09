@@ -137,10 +137,10 @@ button:hover {
     border-radius: 5px;
 }
 
-/* ✅ Early Radar Section */
+/* ✅ Early Radar Container */
 .early-radar-container {
     background: rgba(255, 255, 255, 0.1);
-    padding: 10px;
+    padding: 12px;
     border-radius: 10px;
     margin-top: 20px;
     text-align: left;
@@ -153,7 +153,7 @@ button:hover {
 .early-radar-container h2 {
     text-align: center;
     font-size: 18px;
-    color: #FFD700; /* Warna emas untuk menyorot teks */
+    color: #FFD700; /* Warna emas untuk menonjolkan judul */
     margin-bottom: 10px;
 }
 
@@ -162,13 +162,13 @@ button:hover {
     display: flex;
     align-items: center;
     background: rgba(255, 255, 255, 0.15);
-    padding: 10px;
+    padding: 12px;
     border-radius: 8px;
     margin: 8px 0;
     transition: background 0.3s ease-in-out;
 }
 
-/* ✅ Efek hover untuk Early Radar */
+/* ✅ Efek hover untuk token */
 .early-radar-token:hover {
     background: rgba(255, 255, 255, 0.25);
 }
@@ -196,25 +196,53 @@ button:hover {
     text-decoration: underline;
 }
 
+/* ✅ Contract Address */
+.contract-address {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+/* ✅ Tombol Copy */
+.copy-icon {
+    cursor: pointer;
+    margin-left: 8px;
+    padding: 4px 6px;
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    transition: background 0.2s ease-in-out;
+}
+
+.copy-icon:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
 /* ✅ Link Sosial Media Token */
 .token-links {
     display: flex;
     flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 5px;
+    gap: 6px;
+    margin-top: 8px;
 }
 
 .token-links a {
     font-size: 12px;
     color: #00BFFF;
     text-decoration: none;
+    padding: 4px 6px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    transition: background 0.2s ease-in-out;
 }
 
 .token-links a:hover {
+    background: rgba(255, 255, 255, 0.3);
     text-decoration: underline;
 }
 
-/* ✅ Tambahkan spacing di bawah */
+/* ✅ Pastikan daftar token memiliki margin yang cukup */
 #early-radar-list {
     margin-top: 10px;
 }
