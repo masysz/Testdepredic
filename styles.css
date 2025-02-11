@@ -148,6 +148,13 @@ button:hover {
     text-align: left;
 }
 
+/* ✅ Agar tabel tetap rapi di layar lebih kecil */
+@media (max-width: 600px) {
+    .audit-grid {
+        grid-template-columns: 1fr 1fr; /* Faktor | Skor di kolom kanan, deskripsi jadi multiline */
+    }
+}
+
 /* ✅ Styling untuk setiap baris audit */
 .audit-item {
     display: flex;
@@ -215,6 +222,17 @@ button:hover {
 .audit-item {
     animation: fadeInUp 0.5s ease-out forwards;
 }
+
+.audit-item {
+    opacity: 0; /* Agar animasi terlihat saat pertama kali dimuat */
+}
+
+.audit-item:nth-child(1) { animation-delay: 0.1s; }
+.audit-item:nth-child(2) { animation-delay: 0.2s; }
+.audit-item:nth-child(3) { animation-delay: 0.3s; }
+.audit-item:nth-child(4) { animation-delay: 0.4s; }
+.audit-item:nth-child(5) { animation-delay: 0.5s; }
+.audit-item:nth-child(6) { animation-delay: 0.6s; }
 
 /* ✅ Animasi khusus untuk ikon skor */
 @keyframes scaleUp {
