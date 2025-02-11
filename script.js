@@ -100,17 +100,40 @@ function scanToken() {
                     }
 
                     let detailsHTML = `<h3>🔍 Token Audit Result</h3>`;
-                    detailsHTML += `<p><strong>Score:</strong> ${score} - <strong>${resultSymbol}</strong></p>`;
-                    detailsHTML += `<p><strong>Risk Level:</strong> ${riskLevel}</p>`;
-                    detailsHTML += `<ul>`;
+detailsHTML += `<p><strong>Score:</strong> ${score} - <strong>${resultSymbol}</strong></p>`;
+detailsHTML += `<p><strong>Risk Level:</strong> ${riskLevel}</p>`;
 
-                    data.audit.details.forEach((detail) => {
-                        const icon = detail.deduction > 0 ? "❌" : "✅";
-                        detailsHTML += `<li>${icon} <strong>${detail.factor}:</strong> ${detail.status}</li>`;
-                    });
+detailsHTML += `
+    <table class="audit-table">
+        <thead>
+            <tr>
+                <th>🛡️ Factor</th>
+                <th>Description</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+`;
 
-                    detailsHTML += `</ul>`;
-                    resultDiv.innerHTML = detailsHTML;
+data.audit.details.forEach((detail) => {
+    const icon = detail.deduction > 0 ? "❌" : "✅";
+    const scoreText = detail.deduction > 0 ? `-${detail.deduction}` : "✅";
+    
+    detailsHTML += `
+        <tr>
+            <td>${icon} ${detail.factor}</td>
+            <td>${detail.status}</td>
+            <td class="score-column">${scoreText}</td>
+        </tr>
+    `;
+});
+
+detailsHTML += `
+        </tbody>
+    </table>
+`;
+
+resultDiv.innerHTML = detailsHTML;
 
                     setTimeout(() => {
                         spinnerIndicator.style.transition = "transform 2s ease-out";
