@@ -9,12 +9,13 @@
 <body>
 
     <div class="container">
+        <!-- ✅ Header Image -->
         <h1>
-    <img src="https://i.ibb.co.com/Dgrn3J9J/Photoroom-20250211-105140.png" alt="Crypto Token Scanner" class="header-image">
-</h1>
+            <img src="https://i.ibb.co.com/Dgrn3J9J/Photoroom-20250211-105140.png" alt="Crypto Token Scanner" class="header-image">
+        </h1>
         <p>Scan a Solana token to analyze its risk and potential.</p>
 
-        <!-- Input Token -->
+        <!-- ✅ Input Token -->
         <input type="text" id="tokenInput" placeholder="Enter token address">
         <button id="scanButton">🔍 Scan</button>
 
@@ -23,7 +24,7 @@
             <img src="https://i.ibb.co.com/1fHsDnjr/adsbanner1.png" class="ad-slot" alt="Sponsored Ad">
         </a>
 
-        <!-- Spinner UI -->
+        <!-- ✅ Spinner UI -->
         <div class="spinner-container">
             <div class="spinner"></div>
             <div class="indicator"></div>
@@ -34,7 +35,7 @@
             <img src="https://i.ibb.co.com/1fHsDnjr/adsbanner1.png" class="ad-slot" alt="Crypto Project Promo">
         </a>
 
-        <!-- Scan Result -->
+        <!-- ✅ Scan Result -->
         <div id="result"></div>
 
         <!-- ✅ Slot Iklan 3 (Di bawah hasil scanning) -->
@@ -42,10 +43,15 @@
             <img src="https://i.ibb.co.com/1fHsDnjr/adsbanner1.png" class="ad-slot" alt="Trending Crypto Ad">
         </a>
 
-        <!-- Detailed Parameter Result -->
-        <div id="scan-details"></div>
+        <!-- ✅ Audit Result Section -->
+        <div class="audit-result-container">
+            <h2 class="audit-result-title">🔍 Audit Result</h2>
+            <div class="audit-grid" id="auditResults">
+                <!-- Data audit akan diisi oleh script.js -->
+            </div>
+        </div>
 
-        <!-- ✅ Early Radar Section (PERBAIKAN FINAL) -->
+        <!-- ✅ Early Radar Section -->
         <div class="early-radar-container">
             <h2>🚀 Early Radar</h2>
             <button id="loadEarlyRadar">🔄 Show Tokens</button>
