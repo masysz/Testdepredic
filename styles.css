@@ -128,31 +128,33 @@ button:hover {
     max-width: 450px;
     margin: 20px auto;
     padding: 15px;
-    background: rgba(38, 190, 217, 0.15); /* Warna teal dengan transparansi */
-    backdrop-filter: blur(10px); /* Efek glassmorphism */
-    border-radius: 10px;
-    box-shadow: 0px 4px 15px rgba(38, 190, 217, 0.3); /* Efek shadow warna teal */
-    transition: transform 0.3s ease-in-out;
+    background: rgba(24, 48, 84, 0.25); /* Warna lebih gelap dengan transparansi */
+    backdrop-filter: blur(12px); /* Blur lebih smooth */
+    border: 1px solid rgba(135, 206, 250, 0.4); /* Biru muda elegan */
+    border-radius: 12px;
+    box-shadow: 0px 6px 20px rgba(135, 206, 250, 0.3); /* Efek shadow lebih soft */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
-/* ✅ Hover efek premium */
+/* ✅ Hover efek lebih premium */
 .audit-result-container:hover {
-    transform: scale(1.02);
+    transform: scale(1.03);
+    box-shadow: 0px 8px 25px rgba(135, 206, 250, 0.6); /* Shadow lebih terang saat hover */
 }
 
 /* ✅ Grid styling untuk tabel audit */
 .audit-grid {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr; /* Faktor | Deskripsi | Skor */
-    gap: 8px;
+    gap: 10px;
     width: 100%;
     text-align: left;
 }
 
-/* ✅ Agar tabel tetap rapi di layar lebih kecil */
+/* ✅ Responsif untuk layar lebih kecil */
 @media (max-width: 600px) {
     .audit-grid {
-        grid-template-columns: 1fr 1fr; /* Faktor | Skor di kolom kanan, deskripsi jadi multiline */
+        grid-template-columns: 1fr 1fr; /* Faktor | Skor (deskripsi jadi multiline) */
     }
 }
 
@@ -161,21 +163,21 @@ button:hover {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(255, 255, 255, 0.08);
-    padding: 10px;
-    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.12); /* Lebih kontras */
+    padding: 12px;
+    border-radius: 8px;
     transition: background 0.3s ease-in-out;
 }
 
-/* ✅ Efek hover lebih mewah */
+/* ✅ Efek hover lebih dinamis */
 .audit-item:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 /* ✅ Kolom Faktor (kiri) */
 .audit-factor {
     font-weight: bold;
-    color: #FFD700;
+    color: #FFD700; /* Warna emas */
 }
 
 /* ✅ Kolom Deskripsi (tengah) */
@@ -185,16 +187,16 @@ button:hover {
     text-align: left;
 }
 
-/* ✅ Kolom Skor (kanan) dengan animasi */
+/* ✅ Kolom Skor (kanan) dengan efek */
 .audit-score {
     font-weight: bold;
     text-align: right;
-    padding: 5px 10px;
+    padding: 6px 12px;
     border-radius: 6px;
     transition: transform 0.3s ease-in-out;
 }
 
-/* ✅ Efek warna sesuai skor */
+/* ✅ Warna skor sesuai status */
 .audit-score.green {
     color: #28a745;
 }
@@ -207,11 +209,11 @@ button:hover {
     color: #FF4500;
 }
 
-/* ✅ Animasi muncul (Fade-in & Slide-up) */
+/* ✅ Animasi muncul lebih halus */
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(15px);
+        transform: translateY(12px);
     }
     to {
         opacity: 1;
@@ -221,10 +223,7 @@ button:hover {
 
 /* ✅ Terapkan animasi ke semua item audit */
 .audit-item {
-    animation: fadeInUp 0.5s ease-out forwards;
-}
-
-.audit-item {
+    animation: fadeInUp 0.4s ease-out forwards;
     opacity: 0; /* Agar animasi terlihat saat pertama kali dimuat */
 }
 
@@ -235,9 +234,9 @@ button:hover {
 .audit-item:nth-child(5) { animation-delay: 0.5s; }
 .audit-item:nth-child(6) { animation-delay: 0.6s; }
 
-/* ✅ Animasi khusus untuk ikon skor */
+/* ✅ Efek scale pada skor */
 @keyframes scaleUp {
-    0% { transform: scale(0.8); }
+    0% { transform: scale(0.85); }
     100% { transform: scale(1); }
 }
 
@@ -245,7 +244,7 @@ button:hover {
     animation: scaleUp 0.3s ease-out;
 }
 
-/* ✅ Responsif */
+/* ✅ Responsif lebih optimal */
 @media (max-width: 480px) {
     .audit-grid {
         grid-template-columns: 1fr 1.5fr 1fr;
