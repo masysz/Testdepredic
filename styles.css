@@ -249,6 +249,125 @@ button:hover {
 
 /* ✅ Animasi khusus untuk ikon skor */
 @keyframes scaleUp {
+/* ✅ Styling untuk hasil audit dalam bentuk tabel/grid */
+.audit-result-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 15px;
+    background: rgba(38, 190, 217, 0.15); /* Warna teal dengan transparansi */
+    backdrop-filter: blur(10px); /* Efek glassmorphism */
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(38, 190, 217, 0.3); /* Efek shadow warna teal */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* ✅ Hover efek premium */
+.audit-result-container:hover {
+    transform: scale(1.02);
+    box-shadow: 0px 6px 20px rgba(38, 190, 217, 0.6); /* Shadow lebih terang saat hover */
+}
+
+/* ✅ Grid styling untuk tabel audit */
+.audit-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr; /* Faktor | Deskripsi | Skor */
+    gap: 8px;
+    width: 100%;
+    text-align: left;
+    align-items: center; /* Menjaga agar tulisan tidak berantakan */
+}
+
+/* ✅ Agar tabel tetap rapi di layar lebih kecil */
+@media (max-width: 600px) {
+    .audit-grid {
+        grid-template-columns: 1fr 1fr; /* Faktor & Skor tetap sejajar, deskripsi di bawah */
+    }
+}
+
+/* ✅ Styling untuk setiap baris audit */
+.audit-item {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr; /* Faktor | Deskripsi | Skor */
+    align-items: center;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 12px;
+    border-radius: 8px;
+    transition: background 0.3s ease-in-out;
+}
+
+/* ✅ Efek hover lebih mewah */
+.audit-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* ✅ Kolom Faktor (kiri) */
+.audit-factor {
+    font-weight: bold;
+    color: #FFD700;
+    text-align: left;
+}
+
+/* ✅ Kolom Deskripsi (tengah) */
+.audit-description {
+    color: white;
+    font-size: 14px;
+    text-align: left;
+    overflow-wrap: break-word;
+}
+
+/* ✅ Kolom Skor (kanan) */
+.audit-score {
+    font-weight: bold;
+    text-align: center; /* Supaya angka skor tidak berantakan */
+    padding: 5px 10px;
+    border-radius: 6px;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* ✅ Efek warna sesuai skor */
+.audit-score.green {
+    color: #28a745;
+}
+
+.audit-score.yellow {
+    color: #FFA500;
+}
+
+.audit-score.red {
+    color: #FF4500;
+}
+
+/* ✅ Animasi muncul (Fade-in & Slide-up) */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ✅ Terapkan animasi ke semua item audit */
+.audit-item {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.audit-item:nth-child(1) { animation-delay: 0.1s; }
+.audit-item:nth-child(2) { animation-delay: 0.2s; }
+.audit-item:nth-child(3) { animation-delay: 0.3s; }
+.audit-item:nth-child(4) { animation-delay: 0.4s; }
+.audit-item:nth-child(5) { animation-delay: 0.5s; }
+.audit-item:nth-child(6) { animation-delay: 0.6s; }
+
+/* ✅ Animasi khusus untuk ikon skor */
+@keyframes scaleUp {
     0% { transform: scale(0.85); }
     100% { transform: scale(1); }
 }
@@ -260,7 +379,7 @@ button:hover {
 /* ✅ Responsif */
 @media (max-width: 480px) {
     .audit-grid {
-        grid-template-columns: 1fr 1.5fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
     }
 }
 
