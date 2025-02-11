@@ -86,7 +86,7 @@ function scanToken() {
                     let finalRotation = 0;
 
                     if (score >= 76) {
-                        finalRotation = 0;
+                        finalRotation = 315;
                         resultSymbol = "🟢 Buy";
                     } else if (score >= 51) {
                         finalRotation = 270;
@@ -96,7 +96,7 @@ function scanToken() {
                         resultSymbol = "🔴 Sell";
                     } else {
                         finalRotation = 90;
-                        resultSymbol = "⚠️ Looking";
+                        resultSymbol = "❌️ Toxic Asset";
                     }
 
                     let detailsHTML = `
