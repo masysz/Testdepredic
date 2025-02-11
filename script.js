@@ -89,13 +89,13 @@ function scanToken() {
                         finalRotation = 315;
                         resultSymbol = "🟢 Buy";
                     } else if (score >= 51) {
-                        finalRotation = 270;
+                        finalRotation = 225;
                         resultSymbol = "🟡 Potential";
                     } else if (score >= 26) {
-                        finalRotation = 180;
+                        finalRotation = 135;
                         resultSymbol = "🔴 Sell";
                     } else {
-                        finalRotation = 90;
+                        finalRotation = 45;
                         resultSymbol = "❌️ Toxic Asset";
                     }
 
