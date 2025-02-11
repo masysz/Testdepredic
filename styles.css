@@ -292,6 +292,48 @@ button:hover {
 .audit-item {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr; /* Faktor | Deskripsi | Skor */
+/* ✅ Styling untuk hasil audit dalam bentuk tabel/grid */
+.audit-result-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 15px;
+    background: rgba(38, 190, 217, 0.15); /* Warna teal dengan transparansi */
+    backdrop-filter: blur(10px); /* Efek glassmorphism */
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(38, 190, 217, 0.3); /* Efek shadow warna teal */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* ✅ Hover efek premium */
+.audit-result-container:hover {
+    transform: scale(1.02);
+    box-shadow: 0px 6px 20px rgba(38, 190, 217, 0.6); /* Shadow lebih terang saat hover */
+}
+
+/* ✅ Grid styling untuk tabel audit */
+.audit-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr; /* Faktor | Deskripsi | Skor */
+    gap: 8px;
+    width: 100%;
+    text-align: left;
+}
+
+/* ✅ Agar tabel tetap rapi di layar lebih kecil */
+@media (max-width: 600px) {
+    .audit-grid {
+        grid-template-columns: 1fr 1fr; /* Faktor & Skor tetap sejajar, deskripsi di bawah */
+    }
+}
+
+/* ✅ Styling untuk setiap baris audit */
+.audit-item {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr; /* Faktor | Deskripsi | Skor */
     align-items: center;
     background: rgba(255, 255, 255, 0.08);
     padding: 12px;
@@ -309,6 +351,7 @@ button:hover {
     font-weight: bold;
     color: #FFD700;
     text-align: left;
+    white-space: nowrap; /* Menghindari teks turun ke bawah */
 }
 
 /* ✅ Kolom Deskripsi (tengah) */
@@ -316,7 +359,7 @@ button:hover {
     color: white;
     font-size: 14px;
     text-align: left;
-    overflow-wrap: break-word;
+    word-break: break-word; /* Mencegah teks panjang merusak layout */
 }
 
 /* ✅ Kolom Skor (kanan) */
@@ -379,7 +422,7 @@ button:hover {
 /* ✅ Responsif */
 @media (max-width: 480px) {
     .audit-grid {
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1.5fr 1fr;
     }
 }
 
