@@ -99,11 +99,10 @@ function scanToken() {
                         resultSymbol = "⚠️ Looking";
                     }
 
-                    let detailsHTML = `<h3>🔍 Token Audit Result</h3>`;
-detailsHTML += `<p><strong>Score:</strong> ${score} - <strong>${resultSymbol}</strong></p>`;
-detailsHTML += `<p><strong>Risk Level:</strong> ${riskLevel}</p>`;
-
-detailsHTML += `
+                    let detailsHTML = `
+    <h3>🔍 Token Audit Result</h3>
+    <p><strong>Score:</strong> ${score} - <strong>${resultSymbol}</strong></p>
+    <p><strong>Risk Level:</strong> ${riskLevel}</p>
     <table class="audit-table">
         <thead>
             <tr>
@@ -118,7 +117,7 @@ detailsHTML += `
 data.audit.details.forEach((detail) => {
     const icon = detail.deduction > 0 ? "❌" : "✅";
     const scoreText = detail.deduction > 0 ? `-${detail.deduction}` : "✅";
-    
+
     detailsHTML += `
         <tr>
             <td>${icon} ${detail.factor}</td>
