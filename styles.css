@@ -128,9 +128,10 @@ button:hover {
     max-width: 450px;
     margin: 20px auto;
     padding: 15px;
-    background: rgba(255, 255, 255, 0.1); /* Efek glassmorphism */
+    background: rgba(38, 190, 217, 0.15); /* Warna teal dengan transparansi */
+    backdrop-filter: blur(10px); /* Efek glassmorphism */
     border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.15);
+    box-shadow: 0px 4px 15px rgba(38, 190, 217, 0.3); /* Efek shadow warna teal */
     transition: transform 0.3s ease-in-out;
 }
 
