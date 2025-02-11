@@ -13,6 +13,16 @@ body {
     margin: 0 auto;
 }
 
+/* Header Image */
+.header-image {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    margin: 0 auto 10px;
+    border-radius: 5px;
+}
+
 /* Input dan tombol */
 input {
     width: 100%;
