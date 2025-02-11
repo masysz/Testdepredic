@@ -100,7 +100,7 @@ function scanToken() {
                     }
 
                     let detailsHTML = `
-    <h3>🔍 Token Audit Result</h3>
+    <p>Use this analysis as a reference only</p>
     <p><strong>Score:</strong> ${score} - <strong>${resultSymbol}</strong></p>
     <p><strong>Risk Level:</strong> ${riskLevel}</p>
     <table class="audit-table">
