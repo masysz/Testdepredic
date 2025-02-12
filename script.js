@@ -73,7 +73,8 @@ function scanToken() {
             fetch(`https://micinscore.vercel.app/api/audit/${tokenAddress}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log("📊 API Response:", data);
+    console.log("📊 API Response:", data);
+    console.log("🔥 Buy/Sell Ratio dari BE:", data.audit?.buySellRatio);
 
                     if (!data || !data.audit) {
                         resultDiv.innerHTML = "<p>❌ Error: No audit data found.</p>";
