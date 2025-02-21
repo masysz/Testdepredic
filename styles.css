@@ -7,20 +7,37 @@ body {
     padding: 20px;
 }
 
+/* ✅ Header Container */
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #1a1a1a;
+}
+
 /* Container utama */
 .container {
     max-width: 400px;
     margin: 0 auto;
 }
 
-/* Header Image */
-.header-image {
-    display: block;
-    width: 100%;
-    max-width: 400px;
+/* ✅ Link Telegram & Twitter */
+.social-links a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 15px;
+}
+
+.social-links a:hover {
+    text-decoration: underline;
+}
+
+/* ✅ Header Logo */
+.header-logo {
+    width: 180px; /* Diperkecil */
     height: auto;
-    margin: 0 auto 10px;
-    border-radius: 5px;
 }
 
 /* Input dan tombol */
